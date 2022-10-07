@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "724247529231",
+    "project_id": "orlyrezniksite",
+    "storage_bucket": "orlyrezniksite.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724247529231:android:8d9ede8a8958fa58d5a07a",
+        "android_client_info": {
+          "package_name": "com.family_menu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "724247529231-gc26u851qlgmepgp7l38njrmujq6oeh4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.family_menu",
+            "certificate_hash": "f0de22eeef9cca4995ef0fc8b22049cfc22283a5"
+          }
+        },
+        {
+          "client_id": "724247529231-hr7qbafri2hb8dltfu9a1ea9m3rf2snb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMdBm8zrldlEPJ9oFNxcyye0ZbQDAHPcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "724247529231-hr7qbafri2hb8dltfu9a1ea9m3rf2snb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
