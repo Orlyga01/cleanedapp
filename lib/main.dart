@@ -1,115 +1,205 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:cleanedapp/helpers/global_parameters.dart';
+import 'package:cleanedapp/helpers/route.dart';
+import 'package:cleanedapp/helpers/locator.dart';
+import 'package:cleanedapp/room/room_list_screen.dart';
+import 'package:cleanedapp/tasks_list/tasks_list_screen.dart';
+import 'package:cleanedapp/theme.dart';
+import 'package:sharedor/helpers/device.dart';
+import 'package:sharedor/helpers/dynamic_link_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:easy_localization_loader/easy_localization_loader.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+//import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:sharedor/helpers/secureStorage.dart';
+import 'package:sharedor/widgets/export_widgets.dart';
 
-void main() {
-  runApp(const MyApp());
+final _navigatorKey = GlobalKey<NavigatorState>();
+void main() async {
+  HttpOverrides.global = MyHttpOverrides();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await EasyLocalization.ensureInitialized();
+  await PreferenceUtils().init();
+// global RouteObserver
+  final RouteObserver<PageRoute> routeObserver = new RouteObserver<PageRoute>();
+  await GlobalParametersFM().setGlobalParameters({
+    "navigatorKey": _navigatorKey,
+    "routeObserver": routeObserver,
+    "familyId": "12345"
+  });
+  final value = FirebaseFirestore.instance;
+  value.settings = const Settings(
+      persistenceEnabled: true, cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
+//   try {
+//  //   PreferenceUtils();
+//     // await SystemSettingsController().setSystemSettings();
+//   } catch (e) {
+//     print(e.toString());
+//   }
+  await setupServices();
+  // await locator.get<UserController>().setCurrentUser(familyid: "12345");
+
+  runApp(EasyLocalization(
+      supportedLocales: const [
+        Locale('he'),
+        Locale('en'),
+        Locale('ar'),
+        Locale('he', 'IL')
+      ],
+      path: 'assets/translations/app.csv',
+      assetLoader: CsvAssetLoader(),
+      startLocale: Locale(PreferenceUtils().getLanguage() ?? "en"),
+      //startLocale: Localizations.localeOf(context),
+      // path:
+      //     'assets/translations', // <-- change the path of the translation files
+      fallbackLocale: const Locale('en'),
+      child: ProviderScope(child: FamilyMMenuApp())));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+class FamilyMMenuApp extends StatefulWidget {
+  static void setLocale(BuildContext context, Locale newLocale) {
+    _FamilyMMenuApp? state = context.findAncestorStateOfType<_FamilyMMenuApp>();
+    state?.setLocale(newLocale);
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  static String? getLocale(BuildContext context) {
+    _FamilyMMenuApp? state = context.findAncestorStateOfType<_FamilyMMenuApp>();
+    return state?.getLocale;
+  }
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+  bool isNoConnectivityMessageIsDisplayedNow = false;
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _FamilyMMenuApp createState() => _FamilyMMenuApp();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _FamilyMMenuApp extends State<FamilyMMenuApp>
+    with WidgetsBindingObserver {
+  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+  ConnectivityResult? _connectionStatus;
+  Locale? _locale;
+  String? get getLocale => _locale?.languageCode;
 
-  void _incrementCounter() {
+  setLocale(Locale locale) {
+    context.setLocale(locale); // change `easy_localization` locale
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _locale = locale;
+      print(_locale.toString());
     });
   }
 
+  void handleDynamicLinks() {
+    _timerLink = Timer(
+      const Duration(milliseconds: 100),
+      () async {
+        _dynamicLinkService.retrieveDynamicLink().then((_) {
+          if (_dynamicLinkService.queryFromLink != null) {
+            Map<String, dynamic> linkParams = _dynamicLinkService.queryFromLink;
+            NavigatorState navigator = Navigator.of(context);
+            BeRouter.handleDeepLinks(linkParams, navigator);
+          }
+        });
+      },
+    );
+  }
+
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  Timer? _timerLink;
+  @override
+  void initState() {
+    super.initState();
+
+//     String languageCode = Localizations.localeOf(context).languageCode;
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((result) {
+      setState(() {
+        _connectionStatus = result;
+        //   print(_connectionStatus);
+      });
+    });
+    handleDynamicLinks();
+    WidgetsBinding.instance.addObserver(this);
+    try {
+      NetworkProvider().initConnectivity(_connectivity);
+    } catch (e) {
+      showAlertDialog(e.toString(), context);
+      return;
+    }
+  }
+
+  @override
+  void didChangeDependencies() async {
+    String? locale = FamilyMMenuApp.getLocale(context);
+    if (locale != null) {
+      setState(() {
+        _locale = Locale(locale);
+      });
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      handleDynamicLinks();
+    }
+  }
+
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _timerLink?.cancel();
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    //Widget splashScreen = SplashScreen();
+
+    return MaterialApp(
+        // navigatorObservers: [
+        //   SentryNavigatorObserver(),
+        // ],
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: BeRouter.generateRoute,
+        //navigatorKey: GlobalKey<NavigatorState>(),
+        navigatorKey: _navigatorKey,
+        localizationsDelegates: context.localizationDelegates +
+            [
+              //FormBuilderLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+        supportedLocales: context.supportedLocales,
+        theme: CustomTheme(context).beMemberTheme,
+        title: ('Welcome to Menikot'),
+        locale: context.locale,
+        home: AnimatedSplashScreen(
+            backgroundColor: Colors.white,
+            duration: 2500,
+            splashIconSize: GlobalParametersFM().screenSize.height,
+            nextScreen: RoomListScreen(),
+            splash: SizedBox.shrink()));
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

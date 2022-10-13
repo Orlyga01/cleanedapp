@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:724247529231:android:8d9ede8a8958fa58d5a07a",
         "android_client_info": {
-          "package_name": "com.family_menu"
+          "package_name": "com.cleanedapp"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "724247529231-gc26u851qlgmepgp7l38njrmujq6oeh4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.family_menu",
+            "package_name": "com.cleanedapp",
             "certificate_hash": "f0de22eeef9cca4995ef0fc8b22049cfc22283a5"
           }
         },
