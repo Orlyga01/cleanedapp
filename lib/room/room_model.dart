@@ -5,8 +5,7 @@ import 'package:sharedor/common_functions.dart';
 import 'package:sharedor/misc/model_class.dart';
 
 class Room extends ModelClass {
-  String? title;
-  String roomNo;
+  String title;
   RoomType? type;
   String? categoryJson;
   String? description;
@@ -15,16 +14,16 @@ class Room extends ModelClass {
   Room({
     id,
     this.order,
-    required this.roomNo,
-    this.title,
+    required this.title,
     this.description,
     this.type,
     createdAt,
     modifiedAt,
   }) : super(id: id, createdAt: createdAt, modifiedAt: modifiedAt);
+
   @override
   static Room get empty =>
-      Room(id: '', title: '', roomNo: '0', type: RoomType.bedroom, order: 0);
+      Room(id: '', title: '', type: RoomType.bedroom, order: 0);
 
   dynamic myDateSerializer(dynamic object) {
     if (object is DateTime) {
@@ -33,12 +32,13 @@ class Room extends ModelClass {
     return object;
   }
 
+  bool get validate => !title.isEmptyBe || type == null;
+
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
         'order': order,
-        'roomNo': roomNo,
         'description': description,
         'type': enumToString(type.toString()),
         'createdAt': createdAt.millisecondsSinceEpoch,
@@ -46,12 +46,10 @@ class Room extends ModelClass {
       };
   Room.fromJson(Map<String, dynamic> mjson)
       : title = '',
-        roomNo = '0',
         type = RoomType.bedroom,
         order = 0 {
     super.fromJson(mjson);
     title = mjson['title'];
-    roomNo = mjson['roomNo'];
     order = mjson['order'];
     description = mjson['description'];
     type = enumFromString(mjson['type'], RoomType.values) ?? RoomType.bathroom;
@@ -129,17 +127,17 @@ Map<RoomType, GenericInfoEnum> RoomTypes = {
 List<Room> testRooms = [
   Room.empty
     ..type = RoomType.kitchen
-    ..title = RoomTypes[RoomType.kitchen]!.name,
+    ..title = RoomTypes[RoomType.kitchen]!.name!,
   Room.empty
     ..type = RoomType.livingRoom
-    ..title = RoomTypes[RoomType.livingRoom]!.name,
+    ..title = RoomTypes[RoomType.livingRoom]!.name!,
   Room.empty
     ..type = RoomType.masterBedroom
-    ..title = RoomTypes[RoomType.masterBedroom]!.name,
+    ..title = RoomTypes[RoomType.masterBedroom]!.name!,
   Room.empty
     ..type = RoomType.bathroom
-    ..title = RoomTypes[RoomType.bathroom]!.name,
+    ..title = RoomTypes[RoomType.bathroom]!.name!,
   Room.empty
     ..type = RoomType.studyRoom
-    ..title = RoomTypes[RoomType.studyRoom]!.name,
+    ..title = RoomTypes[RoomType.studyRoom]!.name!,
 ];

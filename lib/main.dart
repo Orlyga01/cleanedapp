@@ -19,10 +19,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 //import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:sharedor/helpers/global_parameters.dart';
 import 'package:sharedor/helpers/secureStorage.dart';
 import 'package:sharedor/widgets/export_widgets.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
@@ -30,6 +32,7 @@ void main() async {
   await Firebase.initializeApp();
   await EasyLocalization.ensureInitialized();
   await PreferenceUtils().init();
+
 // global RouteObserver
   final RouteObserver<PageRoute> routeObserver = new RouteObserver<PageRoute>();
   await GlobalParametersFM().setGlobalParameters({
@@ -94,7 +97,6 @@ class _FamilyMMenuApp extends State<FamilyMMenuApp>
 
     setState(() {
       _locale = locale;
-      print(_locale.toString());
     });
   }
 
@@ -125,7 +127,6 @@ class _FamilyMMenuApp extends State<FamilyMMenuApp>
         _connectivity.onConnectivityChanged.listen((result) {
       setState(() {
         _connectionStatus = result;
-        //   print(_connectionStatus);
       });
     });
     handleDynamicLinks();

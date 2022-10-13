@@ -32,8 +32,8 @@ class CustomTheme {
           bodyColor: BeStyle.textColor,
           displayColor: BeStyle.textColor,
 
-          fontSizeFactor: 1.1,
-          fontSizeDelta: 2.0,
+          // fontSizeFactor: 1.1,
+          // fontSizeDelta: 2.0,
         )
         .copyWith(subtitle1: const TextStyle(fontWeight: FontWeight.w600));
     switch (FamilyMMenuApp.getLocale(context)) {
