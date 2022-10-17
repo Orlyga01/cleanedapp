@@ -1,3 +1,4 @@
+import 'package:cleanedapp/export_all_ui.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/master_page.dart';
 import 'package:cleanedapp/room/room_model.dart';
@@ -72,7 +73,10 @@ class RoomListWidgetState extends State<RoomListWidget> {
       height: GlobalParametersFM().screenSize.height,
       child: Column(
         children: [
-          BeUserEditWidget(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: BeUserEditWidget(),
+          ),
           (widget.addRoomMode == true)
               ? Container(
                   height: 400,

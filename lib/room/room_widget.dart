@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cleanedapp/export_all_ui.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/helpers/locator.dart';
 import 'package:cleanedapp/room/room_model.dart';
@@ -124,14 +125,18 @@ class _RoomWidgetState extends State<RoomWidget> {
 
     return Form(
         key: widget.formKey,
-        child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(8),
-            itemCount: lw.length,
-            itemBuilder: (BuildContext context, int index) {
-              return lw[index];
-            }));
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: widget.readOnly ? null : StyleF.fromBox,
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(8),
+              itemCount: lw.length,
+              itemBuilder: (BuildContext context, int index) {
+                return lw[index];
+              }),
+        ));
   }
 }

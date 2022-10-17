@@ -3,8 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sharedor/style.dart';
 
 class StyleF {
-  static const Color main = Color.fromRGBO(212, 107, 231, 1);
-  static const Color darkermain =  Color.fromRGBO(168, 85, 184, 1);
+  static const Color main = Color.fromRGBO(7, 153, 168, 1);
+  static const Color darkermain = Color.fromRGBO(7, 153, 168, 1);
+  static const Color bgForm = Color(0xFFE0F2F1);
+  var x = Colors.blueGrey;
 
   // ignore: constant_identifier_names
   static const TextStyle H3 = TextStyle(
@@ -27,6 +29,10 @@ class StyleF {
     color: darkermain,
     fontSize: 20,
   );
+  static const BoxDecoration fromBox = BoxDecoration(
+      color: StyleF.bgForm,
+      border:
+          Border.symmetric(horizontal: BorderSide(color: StyleF.darkermain)));
   static const TextStyle inputLabel =
       TextStyle(color: main, fontSize: 14, fontWeight: FontWeight.w600);
   static Map<String, dynamic> thinDivider = {
