@@ -3,8 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sharedor/style.dart';
 
 class StyleF {
-  static const Color main = Colors.lightGreen;
-  static const Color darkermain = Color(0xFF33691E);
+  static const Color main = Color.fromRGBO(212, 107, 231, 1);
+  static const Color darkermain =  Color.fromRGBO(168, 85, 184, 1);
+
   // ignore: constant_identifier_names
   static const TextStyle H3 = TextStyle(
       fontSize: 14,

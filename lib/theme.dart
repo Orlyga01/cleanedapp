@@ -67,7 +67,7 @@ class CustomTheme {
               TextStyle(fontSize: BeStyle.smallText, color: BeStyle.textColor),
         ),
         scaffoldBackgroundColor: Colors.white,
-        hintColor: Colors.grey,
+        hintColor: Colors.grey.shade200,
         textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(
           primary: darkermain,
@@ -107,10 +107,9 @@ class CustomTheme {
             border: UnderlineInputBorder(),
             filled: true,
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintStyle: TextStyle(color: BeStyle.textColorLight),
-            labelStyle: TextStyle(
-              color: StyleF.main,
-            ),
+            hintStyle: BeStyle.inputHint,
+            labelStyle: BeStyle.inputLabel,
+
             // focusedBorder: UnderlineInputBorder(
             //     borderSide: BorderSide(color: BeStyle.lightGray)),
             contentPadding: EdgeInsets.only(

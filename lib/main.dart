@@ -6,6 +6,7 @@ import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/helpers/route.dart';
 import 'package:cleanedapp/helpers/locator.dart';
 import 'package:cleanedapp/room/room_list_screen.dart';
+import 'package:cleanedapp/room/room_repository.dart';
 import 'package:cleanedapp/tasks_list/tasks_list_screen.dart';
 import 'package:cleanedapp/theme.dart';
 import 'package:sharedor/helpers/device.dart';
@@ -51,7 +52,7 @@ void main() async {
 //   }
   await setupServices();
   // await locator.get<UserController>().setCurrentUser(familyid: "12345");
-
+  // await FirebaseUserRoomsRepository(userid: "123").addInitialRoomsList();
   runApp(EasyLocalization(
       supportedLocales: const [
         Locale('he'),
@@ -185,7 +186,7 @@ class _FamilyMMenuApp extends State<FamilyMMenuApp>
             ],
         supportedLocales: context.supportedLocales,
         theme: CustomTheme(context).beMemberTheme,
-        title: ('Welcome to Menikot'),
+        title: ('Welcome to Clean App'),
         locale: context.locale,
         home: AnimatedSplashScreen(
             backgroundColor: Colors.white,

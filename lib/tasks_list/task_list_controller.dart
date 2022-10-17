@@ -8,13 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TaskListController {
   TaskListController();
-  final StreamController<InsTaskList> listItems =
-      StreamController<InsTaskList>();
-  Stream<InsTaskList> get getTaskList => listItems.stream;
+  final StreamController<TaskList> listItems =
+      StreamController<TaskList>();
+  Stream<TaskList> get getTaskList => listItems.stream;
   //UserController repository = locator.get<UserController>();
-  InsTaskList _list = InsTaskList.empty();
+  TaskList _list = TaskList.empty();
 
-  Future<void> setCurrentTaskList(InsTaskList list) async {
+  Future<void> setCurrentTaskList(TaskList list) async {
     _list = list;
 
     listItems.sink.add(_list);
@@ -45,7 +45,7 @@ class TaskListController {
   }
 }
 
-final streamTask = StreamProvider.autoDispose<InsTaskList>((ref) {
+final streamTask = StreamProvider.autoDispose<TaskList>((ref) {
   ref.onDispose(() => print("controller for uid was disposed"));
   return locator.get<TaskListController>().getTaskList;
 });
