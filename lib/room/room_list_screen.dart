@@ -1,6 +1,7 @@
 import 'package:cleanedapp/export_all_ui.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/master_page.dart';
+import 'package:cleanedapp/misc/providers.dart';
 import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/room/room_widget.dart';
 import 'package:cleanedapp/user/be_user_controller.dart';
@@ -10,6 +11,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:sharedor/export_common.dart';
 import 'package:sharedor/helpers/export_helpers.dart';
 import 'package:sharedor/widgets/floating_action_button.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../user/be_user_model.dart';
 
@@ -67,64 +69,69 @@ class RoomListWidgetState extends State<RoomListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool initialState = user?.name.isEmptyBe ?? true;
-    initialState = false;
-    return Container(
-      height: GlobalParametersFM().screenSize.height,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: BeUserEditWidget(),
-          ),
-          (widget.addRoomMode == true)
-              ? Container(
-                  height: 400,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: BeStyle.main, width: 2)),
-                  child: RoomWidget(
-                      formKey: widget._formkey,
-                      onChanged: (Room room) {
-                        saveRoom(room);
-                      }),
-                )
-              : const SizedBox.shrink(),
-          Flexible(
-            child: AbsorbPointer(
-              absorbing: initialState,
-              child: Opacity(
-                opacity: initialState ? 0.4 : 1,
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(8),
-                  // plus one for the add
-                  itemCount: rooms.length + 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        padding: const EdgeInsets.all(0),
-                        decoration: BoxDecoration(
-                          border: index == 0
-                              ? const Border() // This will create no border for the first item
-                              : Border(
-                                  top: BorderSide(
-                                      width: 1,
-                                      color: Theme.of(context).primaryColor)),
-                        ),
-                        child: _buildExpandableTile(
-                            index == 0 ? Room.empty : rooms[index - 1],
-                            firstAddRow: index == 0));
-                  },
+    //  initialState = false;
+    return Consumer(builder: (consumercontext, listen, child) {
+      listen(userStateChanged);
+      user = BeUserController().user;
+
+      bool initialState = user?.name.isEmptyBe ?? true;
+      return Container(
+        height: GlobalParametersFM().screenSize.height,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: BeUserEditWidget(),
+            ),
+            (widget.addRoomMode == true)
+                ? Container(
+                    height: 400,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: BeStyle.main, width: 2)),
+                    child: RoomWidget(
+                        formKey: widget._formkey,
+                        onChanged: (Room room) {
+                          saveRoom(room);
+                        }),
+                  )
+                : const SizedBox.shrink(),
+            Flexible(
+              child: AbsorbPointer(
+                absorbing: initialState,
+                child: Opacity(
+                  opacity: initialState ? 0.4 : 1,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.all(8),
+                    // plus one for the add
+                    itemCount: rooms.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                          padding: const EdgeInsets.all(0),
+                          decoration: BoxDecoration(
+                            border: index == 0
+                                ? const Border() // This will create no border for the first item
+                                : Border(
+                                    top: BorderSide(
+                                        width: 1,
+                                        color: Theme.of(context).primaryColor)),
+                          ),
+                          child: _buildExpandableTile(
+                              index == 0 ? Room.empty : rooms[index - 1],
+                              firstAddRow: index == 0));
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildExpandableTile(Room item, {bool? firstAddRow = false}) {

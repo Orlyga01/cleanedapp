@@ -1,4 +1,6 @@
 //import 'package:bemember/generic_test.dart';
+import 'package:authentication/authentication.dart';
+import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,6 @@ import 'package:sharedor/export_common.dart';
 import 'package:sharedor/helpers/device.dart';
 import 'dart:ui' as ui;
 import 'package:sharedor/widgets/alerts.dart';
-import 'package:cleanedapp/export_all_ui.dart';
 
 class AppMainTemplate extends StatelessWidget {
   final List<Widget> children;
@@ -90,7 +91,14 @@ class AppMainTemplate extends StatelessWidget {
                 actions: actions),
             floatingActionButton: floatingActionButton,
             floatingActionButtonLocation: floatingActionButtonLocation,
-            persistentFooterButtons: persistentFooterButtons,
+            persistentFooterButtons: [
+              InkWell(
+                  onTap: () {
+                    BeUserController().clearUser();
+                  },
+                  child: Text("Clear User")),
+            ],
+            //persistentFooterButtons: persistentFooterButtons,
             body: GestureDetector(
               onTap: () {
                 FocusScopeNode currentFocus = FocusScope.of(context);

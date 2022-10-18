@@ -2,7 +2,6 @@ import 'package:authentication/authenticate/Widgets/forgot_password.dart';
 import 'package:authentication/authenticate/Widgets/login_page.dart';
 import 'package:authentication/shared/auth_widgets.dart';
 import 'package:authentication/user/providers/user_provider.dart';
-import 'package:cleanedapp/helpers/local_storage.dart';
 import 'package:cleanedapp/tasks_list/tasks_list_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

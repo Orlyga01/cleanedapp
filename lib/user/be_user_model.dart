@@ -1,11 +1,8 @@
-import 'dart:convert';
-import 'package:authentication/authentication.dart';
 import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/tasks_list/task_list_model.dart';
-import 'package:sharedor/common_functions.dart';
 import 'package:sharedor/misc/model_class.dart';
 
-class BeUser extends ModelClass {
+class BeUser extends ModelClass<BeUser> {
   String? name;
   String phoneNo;
   List<Room> rooms;
@@ -37,6 +34,7 @@ class BeUser extends ModelClass {
     final data = super.toJson();
     data['name'] = name;
     data['phoneNo'] = phoneNo;
+    data['rooms'] = listToJson(rooms);
     return data;
   }
 
@@ -47,7 +45,7 @@ class BeUser extends ModelClass {
     super.fromJson(mjson);
     name = mjson['name'];
     phoneNo = mjson['phoneNo'];
-    rooms = mjson['rooms'];
+    rooms = Room.empty.listFromJson(mjson['rooms']) ?? [];
   }
 
   factory BeUser.fromJ(Map<String, dynamic> mjson) {

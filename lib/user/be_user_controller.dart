@@ -18,12 +18,31 @@ class BeUserController {
     BeUser? beUser = getOfflineUser();
     _beUser = beUser ?? BeUser.empty
       ..id = "";
-    _beUserRepository.setUserId = user.id;
+    _beUserRepository.setUserId = _beUser.id;
   }
 
-  Future<BeUser?> get(String id) async {
+  setUser(BeUser user) {
+    _beUser = user;
+    _beUserRepository.setUserId = _beUser.id;
+    setOfflineUser(user);
+  }
+
+  clearUser() {
+    _beUser = BeUser.empty;
+    PreferenceUtils().clear("cleanapp_user");
+  }
+
+  Future<BeUser?> get(String id, {bool setInit = false}) async {
     id = id.replaceAll(RegExp(r'[^0-9]'), '');
-    return _beUserRepository.get(id: id);
+    try {
+      BeUser? user = await _beUserRepository.get(id: id);
+      if (user != null) {
+        setUser(user);
+      }
+      return user;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void setOfflineUser(BeUser user) {
@@ -31,9 +50,13 @@ class BeUserController {
   }
 
   BeUser? getOfflineUser() {
+    // PreferenceUtils().clear("cleanapp_user");
     Map<String, dynamic>? userJson =
         PreferenceUtils().storageToMap("cleanapp_user");
     if (userJson != null) {
+      userJson['createdAt'] = DateTime.tryParse(userJson['createdAt']);
+      userJson['modifiedAt'] = DateTime.tryParse(userJson['modifiedAt']);
+
       return BeUser.fromJson(userJson);
     }
   }

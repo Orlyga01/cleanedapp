@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cleanedapp/task/task_model.dart';
 import 'package:sharedor/misc/model_class.dart';
 
-class TaskList extends ModelClass {
+class TaskList extends ModelClass<TaskList> {
   DateTime date;
   List<Task> tasks;
 

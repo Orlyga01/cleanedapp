@@ -4,7 +4,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:sharedor/common_functions.dart';
 import 'package:sharedor/misc/model_class.dart';
 
-class Room extends ModelClass {
+class Room extends ModelClass<Room> {
   String title;
   RoomType? type;
   String? categoryJson;
@@ -22,7 +22,7 @@ class Room extends ModelClass {
   }) : super(id: id, createdAt: createdAt, modifiedAt: modifiedAt);
 
   @override
-   static Room get empty =>
+  static Room get empty =>
       Room(id: '', title: '', type: RoomType.bedroom, order: 0);
 
   dynamic myDateSerializer(dynamic object) {
@@ -58,6 +58,12 @@ class Room extends ModelClass {
 
   factory Room.fromJ(Map<String, dynamic> mjson) {
     return Room.fromJson(mjson);
+  }
+
+  List<Room>? listFromJson(List<dynamic>? list) {
+    return (list != null && list.isNotEmpty)
+        ? list.map((task) => Room.fromJson(task)).toList()
+        : null;
   }
 
   static List<Room> getBasicRoomList({int priority = 5}) {

@@ -56,9 +56,11 @@ class FirebaseUserRepository {
     }
   }
 
-  set setUserId(value) {
+  set setUserId(String value) {
     userid = value;
-    _dbUser = _userCollection.doc(value);
+    if (!value.isEmptyBe) {
+      _dbUser = _userCollection.doc(value);
+    }
   }
 
   // Future<BeUser?> get(id) async {

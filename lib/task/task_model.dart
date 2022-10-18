@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:cleanedapp/misc/categories_mode.dart';
 import 'package:sharedor/misc/model_class.dart';
 
-class Task extends ModelClass {
+class Task extends ModelClass<Task> {
   String title;
   List<String>? categories;
   String? description;

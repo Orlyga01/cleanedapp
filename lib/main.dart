@@ -6,9 +6,8 @@ import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/helpers/route.dart';
 import 'package:cleanedapp/helpers/locator.dart';
 import 'package:cleanedapp/room/room_list_screen.dart';
-import 'package:cleanedapp/room/room_repository.dart';
-import 'package:cleanedapp/tasks_list/tasks_list_screen.dart';
 import 'package:cleanedapp/theme.dart';
+import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:sharedor/helpers/device.dart';
 import 'package:sharedor/helpers/dynamic_link_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,6 +31,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await EasyLocalization.ensureInitialized();
+
   await PreferenceUtils().init();
 
 // global RouteObserver
@@ -41,6 +41,7 @@ void main() async {
     "routeObserver": routeObserver,
     "familyId": "12345"
   });
+  BeUserController().init();
   final value = FirebaseFirestore.instance;
   value.settings = const Settings(
       persistenceEnabled: true, cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
