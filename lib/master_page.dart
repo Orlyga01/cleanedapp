@@ -1,5 +1,4 @@
 //import 'package:bemember/generic_test.dart';
-import 'package:authentication/authentication.dart';
 import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
@@ -62,6 +61,7 @@ class AppMainTemplate extends StatelessWidget {
                 icon: const Icon(LineAwesomeIcons.home))
             : const SizedBox.shrink();
 
+    // ignore: unused_local_variable
     List<Widget>? actionList;
     if (actions != null) actionList = actions!;
 
@@ -83,7 +83,7 @@ class AppMainTemplate extends StatelessWidget {
             appBar: AppBar(
                 backgroundColor: Colors.blueGrey.shade50,
                 toolbarHeight: 30,
-                toolbarTextStyle: TextStyle(color: BeStyle.textColor),
+                toolbarTextStyle: const TextStyle(color: BeStyle.textColor),
                 toolbarOpacity: 0.8,
                 title: title ?? const SizedBox.expand(),
                 centerTitle: true,
@@ -96,7 +96,7 @@ class AppMainTemplate extends StatelessWidget {
                   onTap: () {
                     BeUserController().clearUser();
                   },
-                  child: Text("Clear User")),
+                  child: const Text("Clear User")),
             ],
             //persistentFooterButtons: persistentFooterButtons,
             body: GestureDetector(
@@ -109,7 +109,7 @@ class AppMainTemplate extends StatelessWidget {
                 }
               },
               child: SafeArea(
-                child: Container(
+                child: SizedBox(
                   height: double.infinity,
                   width: double.infinity,
                   child: Padding(
@@ -139,7 +139,7 @@ class AppMainTemplate extends StatelessWidget {
                                       decoration: const BoxDecoration(
                                           color: Colors.white,
                                           border: Border(
-                                            top: const BorderSide(width: 2),
+                                            top: BorderSide(width: 2),
                                           )),
                                       child: bottomArea!))),
                         if (topLeftArea != null)

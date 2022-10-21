@@ -32,7 +32,7 @@ class Room extends ModelClass<Room> {
     return object;
   }
 
-  bool get validate => !title.isEmptyBe || type == null;
+  bool get validate => !title.isEmptyBe && type != null;
 
   @override
   Map<String, dynamic> toJson() {

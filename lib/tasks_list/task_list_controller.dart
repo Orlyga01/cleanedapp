@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:authentication/authentication.dart';
 import 'package:cleanedapp/Task/task_model.dart';
 import 'package:cleanedapp/helpers/locator.dart';
 import 'package:cleanedapp/tasks_list/task_list_model.dart';

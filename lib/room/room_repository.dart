@@ -6,7 +6,7 @@ class FirebaseUserRoomsRepository {
   late DocumentReference _userDoc;
   late FirebaseFirestore _db;
   static final FirebaseUserRoomsRepository _dbUserRooms =
-      new FirebaseUserRoomsRepository._internal();
+      FirebaseUserRoomsRepository._internal();
   FirebaseUserRoomsRepository._internal();
   factory FirebaseUserRoomsRepository({required String userid}) {
     _dbUserRooms.userid = userid;
@@ -29,9 +29,9 @@ class FirebaseUserRoomsRepository {
         }
       }
       List<Map<String, dynamic>> toSave = [];
-      rooms.forEach((element) {
+      for (var element in rooms) {
         toSave.add(element.toJson());
-      });
+      }
       return _userDoc.update({"rooms": toSave});
       // batch.commit();
     }

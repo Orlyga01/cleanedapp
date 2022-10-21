@@ -7,9 +7,10 @@ import 'package:sharedor/common_functions.dart';
 class FirebaseUserRepository {
   late String userid;
   late CollectionReference _userCollection;
+  // ignore: unused_field
   late DocumentReference? _dbUser;
   static final FirebaseUserRepository _dbUserRep =
-      new FirebaseUserRepository._internal();
+       FirebaseUserRepository._internal();
   FirebaseUserRepository._internal();
   factory FirebaseUserRepository({required String userid}) {
     _dbUserRep._userCollection = FirebaseFirestore.instance.collection("users");
@@ -52,7 +53,7 @@ class FirebaseUserRepository {
       }
       return null;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -78,7 +79,6 @@ class FirebaseUserRepository {
   //   }
   // }
 
-  @override
   Future<void> update(String? id,
       [BeUser? user, String? fieldName, dynamic fieldValue]) {
     if (fieldName != null) {
@@ -86,7 +86,7 @@ class FirebaseUserRepository {
         print("----------error===========id was not passed to update");
         throw "no user id";
       }
-
+      
       return _userCollection.doc(id).update({
         fieldName: fieldValue,
         "modifiedAt": DateTime.now().millisecondsSinceEpoch

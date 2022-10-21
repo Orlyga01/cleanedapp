@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:cleanedapp/helpers/local_storage.dart';
+import 'package:cleanedapp/room/room_controller.dart';
+import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/user/be_user_model.dart';
 import 'package:cleanedapp/user/user_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sharedor/helpers/export_helpers.dart';
 
 class BeUserController {
-  static final BeUserController _beUserC = new BeUserController._internal();
+  static final BeUserController _beUserC = BeUserController._internal();
   late FirebaseUserRepository _beUserRepository;
   BeUserController._internal();
   BeUser _beUser = BeUser.empty;
@@ -16,14 +18,20 @@ class BeUserController {
   }
   void init() async {
     BeUser? beUser = getOfflineUser();
-    _beUser = beUser ?? BeUser.empty
-      ..id = "";
-    _beUserRepository.setUserId = _beUser.id;
+    _beUser = beUser ?? BeUser.empty;
+
+    setUser(_beUser);
   }
 
   setUser(BeUser user) {
     _beUser = user;
     _beUserRepository.setUserId = _beUser.id;
+    // _beUser.rooms.removeRange(5, _beUser.rooms.length);
+
+    // updateBeUser(user.id,
+    //     fieldName: "rooms", fieldValue: user.listToJson(_beUser.rooms));
+    RoomController().setCurrentRoomList(_beUser.rooms);
+
     setOfflineUser(user);
   }
 
@@ -59,6 +67,7 @@ class BeUserController {
 
       return BeUser.fromJson(userJson);
     }
+    return null;
   }
 
   String get userid => _beUser.id;
@@ -86,14 +95,48 @@ class BeUserController {
     }
   }
 
+  Future<void> updateRoomListOfUser(
+    List<Room> rooms,
+  ) async {
+    rooms.forEach((element) {
+      print(element);
+    });
+    try {
+      await updateBeUser(userid,
+          fieldName: "rooms", fieldValue: user.listToJson(rooms));
+
+      RoomController().updateRooms(user.rooms);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateRoomOfUser(Room room, {addMode = false}) async {
+    print("----" + room.type.toString() + room.title);
+    if (!room.validate) throw "room not valid";
+    final index = user.rooms.indexWhere((element) => element.id == room.id);
+    if (index >= 0) {
+      user.rooms[index] = room;
+    } else {
+      user.rooms = [room] + user.rooms;
+    }
+    try {
+      await updateBeUser(userid,
+          fieldName: "rooms", fieldValue: user.listToJson(user.rooms));
+      RoomController().updateRooms(user.rooms);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> updateBeUser(String id,
-      [BeUser? user, String? fieldName, dynamic fieldValue]) async {
+      {BeUser? user, String? fieldName, dynamic fieldValue}) async {
     if (fieldName != null) {
       _beUser.toJson()[fieldName] = fieldValue;
     } else
       _beUser = user!;
     try {
-      _beUserRepository.update(id, user, fieldName, fieldValue);
+      await _beUserRepository.update(id, user, fieldName, fieldValue);
       setOfflineUser(_beUser);
     } catch (e) {
       throw e.toString();

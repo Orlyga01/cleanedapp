@@ -49,7 +49,6 @@ void main() async {
 //  //   PreferenceUtils();
 //     // await SystemSettingsController().setSystemSettings();
 //   } catch (e) {
-//     print(e.toString());
 //   }
   await setupServices();
   // await locator.get<UserController>().setCurrentUser(familyid: "12345");
@@ -170,31 +169,33 @@ class _FamilyMMenuApp extends State<FamilyMMenuApp>
   Widget build(BuildContext context) {
     //Widget splashScreen = SplashScreen();
 
-    return MaterialApp(
-        // navigatorObservers: [
-        //   SentryNavigatorObserver(),
-        // ],
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: BeRouter.generateRoute,
-        //navigatorKey: GlobalKey<NavigatorState>(),
-        navigatorKey: _navigatorKey,
-        localizationsDelegates: context.localizationDelegates +
-            [
-              //FormBuilderLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-            ],
-        supportedLocales: context.supportedLocales,
-        theme: CustomTheme(context).beMemberTheme,
-        title: ('Welcome to Clean App'),
-        locale: context.locale,
-        home: AnimatedSplashScreen(
-            backgroundColor: Colors.white,
-            duration: 2500,
-            splashIconSize: GlobalParametersFM().screenSize.height,
-            nextScreen: RoomListScreen(),
-            splash: SizedBox.shrink()));
+    return ProviderScope(
+      child: MaterialApp(
+          // navigatorObservers: [
+          //   SentryNavigatorObserver(),
+          // ],
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: BeRouter.generateRoute,
+          //navigatorKey: GlobalKey<NavigatorState>(),
+          navigatorKey: _navigatorKey,
+          localizationsDelegates: context.localizationDelegates +
+              [
+                //FormBuilderLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+          supportedLocales: context.supportedLocales,
+          theme: CustomTheme(context).beMemberTheme,
+          title: ('Welcome to Clean App'),
+          locale: context.locale,
+          home: AnimatedSplashScreen(
+              backgroundColor: Colors.white,
+              duration: 2500,
+              splashIconSize: GlobalParametersFM().screenSize.height,
+              nextScreen: RoomListScreen(),
+              splash: SizedBox.shrink())),
+    );
   }
 }
 

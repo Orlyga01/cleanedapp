@@ -12,7 +12,7 @@ import 'package:sharedor/widgets/radio_buttons.dart';
 import 'package:sharedor/widgets/shared_form_fields.dart';
 
 class RoomWidget extends StatefulWidget {
-  final Function(Room) onChanged;
+  final Function(Room)? onChanged;
   final String? initialValue;
   final bool isChild;
   final bool isRequired;
@@ -24,7 +24,7 @@ class RoomWidget extends StatefulWidget {
   GlobalKey<FormState> formKey;
   RoomWidget(
       {Key? key,
-      required this.onChanged,
+      this.onChanged,
       this.controller,
       this.initialValue,
       this.isChild = false,
@@ -51,12 +51,12 @@ class _RoomWidgetState extends State<RoomWidget> {
     double screenHeight = locator.get<GlobalParametersFM>().screenSize.height;
     double screenWidth = locator.get<GlobalParametersFM>().screenSize.width;
 
-    Timer? _debounce;
+    Timer? debounce;
     _onSearchChanged() {
-      if (_debounce?.isActive ?? false) _debounce?.cancel();
-      _debounce = Timer(const Duration(milliseconds: 500), () {
-        if (widget.changed) {
-          widget.onChanged(widget.room);
+      if (debounce?.isActive ?? false) debounce?.cancel();
+      debounce = Timer(const Duration(milliseconds: 500), () {
+        if (widget.changed && widget.onChanged != null) {
+          widget.onChanged!(widget.room);
           widget.changed = false;
         }
       });
@@ -64,7 +64,7 @@ class _RoomWidgetState extends State<RoomWidget> {
 
     @override
     void dispose() {
-      _debounce?.cancel();
+      debounce?.cancel();
       //widget.formKey = null;
       super.dispose();
     }
