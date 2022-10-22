@@ -96,6 +96,7 @@ class _RoomWidgetState extends State<RoomWidget> {
             enabled: !widget.readOnly,
             initialValue: widget.room.title,
             decoration: InputDecoration(
+              
               labelText: "Title".ctr(),
             ).unifiedLabel(readOnly: widget.readOnly),
             onChanged: (value) => {

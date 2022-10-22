@@ -60,7 +60,7 @@ class CustomTheme {
         appBarTheme: const AppBarTheme(
           iconTheme: IconThemeData(
             size: BeStyle.smallText * 1.8,
-            color: BeStyle.textColor,
+            color: BeStyle.textColorLight,
           ),
           foregroundColor: BeStyle.textColor,
           titleTextStyle:

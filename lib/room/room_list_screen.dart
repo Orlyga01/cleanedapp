@@ -13,6 +13,7 @@ import 'package:sharedor/external_export_view.dart';
 import 'package:sharedor/helpers/export_helpers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reorderables/reorderables.dart';
+import 'package:sharedor/widgets/action_widgets.dart';
 import 'package:sharedor/widgets/first_row_list_add.dart';
 
 import '../user/be_user_model.dart';
@@ -82,15 +83,65 @@ class RoomListWidgetState extends State<RoomListWidget> {
           (item.title),
         ),
         children: <Widget>[
-          RoomWidget(
-            room: item,
-            readOnly: true,
-            formKey: widget.gkRoom[item.id] ?? GlobalKey<FormState>(),
-            onChanged: (Room item) {
-              // saveRoom(item);
-            },
+          Stack(
+            children: [
+              RoomWidget(
+                room: item,
+                readOnly: true,
+                formKey: widget.gkRoom[item.id] ?? GlobalKey<FormState>(),
+                onChanged: (Room item) {
+                  // saveRoom(item);
+                },
+              ),
+              Positioned.directional(
+                  textDirection: Directionality.of(context),
+                  end: 0,
+                  top: 0,
+                  child: Align(
+                      alignment: FractionalOffset.bottomCenter,
+                      child: Wrap(
+                        
+                        children: [
+                          DeleteAction(
+                              onClickOK: (Room item) => deleteRoom(item),
+                              item: item),
+                          PopupMenuButton(
+                            itemBuilder: (context) {
+                              return [
+                                PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Edit'),
+                                ),
+                                PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Delete'),
+                                )
+                              ];
+                            },
+                          ),
+                        ],
+                      ))),
+            ],
           )
         ]);
+  }
+
+  Future<bool> deleteRoom(Room room) async {
+    int index = rooms.indexWhere((element) => element.id == room.id);
+    if (index > -1) {
+      try {
+        rooms.removeAt(index);
+        await BeUserController().updateRoomListOfUser(rooms);
+        setState(() {});
+      } catch (e) {
+        showAlertDialog(e.toString(), context);
+        return false;
+      }
+    } else {
+      print("room with id $room.id cannot be found");
+      return false;
+    }
+    return true;
   }
 
   Future<void> updateRoomsList(List<Room> rooms) async {
