@@ -19,13 +19,11 @@ class RoomWidget extends StatefulWidget {
   final bool readOnly;
   final Room room;
   bool changed = false;
-  TextEditingController? controller;
   final bool? checkIfPhoneIsAlreadyInUser;
   GlobalKey<FormState> formKey;
   RoomWidget(
       {Key? key,
       this.onChanged,
-      this.controller,
       this.initialValue,
       this.isChild = false,
       this.isRequired = false,
@@ -82,12 +80,18 @@ class _RoomWidgetState extends State<RoomWidget> {
     } else {
       lw = [
         RadioButtonWidget(
-          selectedItem: widget.room.type,
-          items: RoomType.values,
-          screenWidth: screenWidth,
-        ),
+            selectedItem: widget.room.type,
+            items: RoomType.values,
+            screenWidth: screenWidth,
+            onChange: (value) => {
+                  widget.changed = true,
+                  widget.room.type = value,
+                  setDefaultTitle(),
+                  _onSearchChanged()
+                }),
         const SizedBox(height: 10),
         TextFormField(
+            key: GlobalKey(),
             // initialValue: initialValue,
             enabled: !widget.readOnly,
             initialValue: widget.room.title,
@@ -138,5 +142,10 @@ class _RoomWidgetState extends State<RoomWidget> {
                 return lw[index];
               }),
         ));
+  }
+
+  setDefaultTitle() {
+    widget.room.title = enumToString(widget.room.type.toString());
+    setState(() {});
   }
 }

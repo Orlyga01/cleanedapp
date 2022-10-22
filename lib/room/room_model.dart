@@ -23,7 +23,7 @@ class Room extends ModelClass<Room> {
 
   @override
   static Room get empty =>
-      Room(id: '', title: '', type: RoomType.bedroom, order: 0);
+      Room(id: '', title: 'Bedroom', type: RoomType.bedroom, order: 0);
 
   dynamic myDateSerializer(dynamic object) {
     if (object is DateTime) {

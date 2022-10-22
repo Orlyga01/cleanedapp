@@ -10,7 +10,7 @@ class FirebaseUserRepository {
   // ignore: unused_field
   late DocumentReference? _dbUser;
   static final FirebaseUserRepository _dbUserRep =
-       FirebaseUserRepository._internal();
+      FirebaseUserRepository._internal();
   FirebaseUserRepository._internal();
   factory FirebaseUserRepository({required String userid}) {
     _dbUserRep._userCollection = FirebaseFirestore.instance.collection("users");
@@ -86,11 +86,10 @@ class FirebaseUserRepository {
         print("----------error===========id was not passed to update");
         throw "no user id";
       }
-      
-      return _userCollection.doc(id).update({
-        fieldName: fieldValue,
-        "modifiedAt": DateTime.now().millisecondsSinceEpoch
-      });
+
+      return _userCollection
+          .doc(id)
+          .update({fieldName: fieldValue, "modifiedAt": DateTime.now()});
     } else {
       if (user == null) {
         print("----------error===========no user");

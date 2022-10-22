@@ -185,12 +185,10 @@ class RoomListWidgetState extends State<RoomListWidget> {
   }
 
   Future<bool> saveRoom(Room room, {bool? addMode = false}) async {
-    print(room.title);
-    setState(() {});
-    return true;
+    print(room.type);
     bool? isValid;
     isValid = widget._formkey.currentState?.validate();
-    if (!isValid!) return false;
+    if (isValid == false) return false;
     try {
       await BeUserController().updateRoomOfUser(room);
       setState(() {});
@@ -199,6 +197,16 @@ class RoomListWidgetState extends State<RoomListWidget> {
       return false;
     }
     return true;
+
+    // if (!isValid!) return false;
+    // try {
+    //   await BeUserController().updateRoomOfUser(room);
+    //   setState(() {});
+    // } catch (e) {
+    //   showAlertDialog(e.toString(), context);
+    //   return false;
+    // }
+    // return true;
   }
 }
 //   @override
