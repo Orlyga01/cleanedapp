@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cleanedapp/user/be_user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -38,7 +39,7 @@ class FirebaseUserRepository {
 
   Future<BeUser?> get({String? id}) async {
     if (id == null && userid.isEmptyBe) {
-      print("no user id provided");
+      log("no user id provided");
       throw "error";
     }
     id = id ?? userid;
@@ -83,7 +84,7 @@ class FirebaseUserRepository {
       [BeUser? user, String? fieldName, dynamic fieldValue]) {
     if (fieldName != null) {
       if (id == null) {
-        print("----------error===========id was not passed to update");
+        log("----------error===========id was not passed to update");
         throw "no user id";
       }
 
@@ -92,7 +93,7 @@ class FirebaseUserRepository {
           .update({fieldName: fieldValue, "modifiedAt": DateTime.now()});
     } else {
       if (user == null) {
-        print("----------error===========no user");
+        log("----------error===========no user");
         throw "no user ";
       }
 

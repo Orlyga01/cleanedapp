@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sharedor/export_common.dart';
 
 class CustomTheme {
+  // ignore: prefer_typing_uninitialized_variables
   final context;
   CustomTheme(this.context);
   ThemeData get beMemberTheme {
@@ -24,6 +25,7 @@ class CustomTheme {
     };
     //final Color main = Colors.red;
 
+    // ignore: non_constant_identifier_names
     TextTheme TextThemeLang = Theme.of(context)
         .textTheme
         .apply(
@@ -43,7 +45,7 @@ class CustomTheme {
       default:
         TextThemeLang = GoogleFonts.assistantTextTheme(TextThemeLang);
     }
-    ;
+
     return ThemeData(
         //  fontFamilyM: 'Poppins',
 

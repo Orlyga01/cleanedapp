@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:cleanedapp/helpers/local_storage.dart';
+import 'dart:developer';
+
 import 'package:cleanedapp/room/room_controller.dart';
 import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/user/be_user_model.dart';
@@ -95,12 +96,25 @@ class BeUserController {
     }
   }
 
+  Future<void> updateBeUser(String id,
+      {BeUser? user, String? fieldName, dynamic fieldValue}) async {
+    if (fieldName != null) {
+      _beUser.toJson()[fieldName] = fieldValue;
+    } else {
+      _beUser = user!;
+    }
+    try {
+      await _beUserRepository.update(id, user, fieldName, fieldValue);
+      setOfflineUser(_beUser);
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+//------------------------Rooms--------------------
   Future<void> updateRoomListOfUser(
     List<Room> rooms,
   ) async {
-    rooms.forEach((element) {
-      print(element);
-    });
     try {
       await updateBeUser(userid,
           fieldName: "rooms", fieldValue: user.listToJson(rooms));
@@ -112,7 +126,6 @@ class BeUserController {
   }
 
   Future<void> updateRoomOfUser(Room room, {addMode = false}) async {
-    print("----" + room.type.toString() + room.title);
     if (!room.validate) throw "room not valid";
     final index = user.rooms.indexWhere((element) => element.id == room.id);
     if (index >= 0) {
@@ -129,17 +142,18 @@ class BeUserController {
     }
   }
 
-  Future<void> updateBeUser(String id,
-      {BeUser? user, String? fieldName, dynamic fieldValue}) async {
-    if (fieldName != null) {
-      _beUser.toJson()[fieldName] = fieldValue;
-    } else
-      _beUser = user!;
-    try {
-      await _beUserRepository.update(id, user, fieldName, fieldValue);
-      setOfflineUser(_beUser);
-    } catch (e) {
-      throw e.toString();
+  Future<void> deleteUserRoom(Room room) async {
+    int index = user.rooms.indexWhere((element) => element.id == room.id);
+    if (index > -1) {
+      try {
+        user.rooms.removeAt(index);
+        await BeUserController().updateRoomListOfUser(user.rooms);
+      } catch (e) {
+        rethrow;
+      }
+    } else {
+      log("room with id $room.id cannot be found");
+      throw "error";
     }
   }
 }
