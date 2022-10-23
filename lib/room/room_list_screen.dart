@@ -14,6 +14,7 @@ import 'package:sharedor/helpers/export_helpers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:sharedor/widgets/first_row_list_add.dart';
+import 'package:sharedor/widgets/expanded_inside_list.dart';
 
 import '../user/be_user_model.dart';
 
