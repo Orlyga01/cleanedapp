@@ -43,13 +43,7 @@ class RoomListWidget extends StatefulWidget {
   bool? updateRoomMode = true;
   bool tileExpanded = false;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-//   BeUser? user = BeUserController().user;
-//   Room? newRoom;
-//   @override
-//   void initState() {
-//     if (user != null) RoomController().setCurrentRoomList(user!.rooms);
-//     super.initState();
-//   }
+
   RoomListWidget({
     Key? key,
     required this.rooms,

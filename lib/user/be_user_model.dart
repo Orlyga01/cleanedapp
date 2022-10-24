@@ -22,13 +22,6 @@ class BeUser extends ModelClass<BeUser> {
         id: '', name: '', phoneNo: '', rooms: Room.getBasicRoomList());
   }
 
-  dynamic myDateSerializer(dynamic object) {
-    if (object is DateTime) {
-      return object.toIso8601String();
-    }
-    return object;
-  }
-
   @override
   Map<String, dynamic> toJson() {
     final data = super.toJson();

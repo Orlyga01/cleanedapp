@@ -18,21 +18,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // ignore: must_be_immutable
 class RoomWidget extends StatefulWidget {
   final Function(Room)? onChanged;
-  final String? initialValue;
-  final bool isChild;
-  final bool isRequired;
   bool readOnly;
   final Room room;
   bool changed = false;
-  final bool? checkIfPhoneIsAlreadyInUser;
   GlobalKey<FormState> formKey;
   RoomWidget(
       {Key? key,
       this.onChanged,
-      this.initialValue,
-      this.isChild = false,
-      this.isRequired = false,
-      this.checkIfPhoneIsAlreadyInUser,
       required this.formKey,
       this.readOnly = false,
       Room? room})
@@ -51,8 +43,6 @@ class _RoomWidgetState extends State<RoomWidget> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = locator.get<GlobalParametersFM>().screenSize.width;
-
     Timer? debounce;
     _onSearchChanged() {
       if (debounce?.isActive ?? false) debounce?.cancel();
@@ -86,7 +76,6 @@ class _RoomWidgetState extends State<RoomWidget> {
         RadioButtonWidget(
             selectedItem: widget.room.type,
             items: RoomType.values,
-            screenWidth: screenWidth,
             onChange: (value) => {
                   widget.changed = true,
                   widget.room.type = value,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cleanedapp/misc/categories_mode.dart';
+import 'package:sharedor/common_functions.dart';
 import 'package:sharedor/misc/model_class.dart';
 
 class Task extends ModelClass<Task> {
@@ -7,7 +8,7 @@ class Task extends ModelClass<Task> {
   List<String>? categories;
   String? description;
   String? img;
-  List<String>? rooms;
+  String? roomId;
   FrequencyEnum frequency;
 
   Task({
@@ -16,23 +17,15 @@ class Task extends ModelClass<Task> {
     required this.frequency,
     this.categories,
     this.description,
-    this.rooms,
+    this.roomId,
     this.img,
     createdAt,
     modifiedAt,
   }) : super(id: id, createdAt: createdAt, modifiedAt: modifiedAt);
+  static Task get empty =>
+      Task(title: "", roomId: '', frequency: FrequencyEnum.everyTime);
+  bool get validate => !title.isEmptyBe;
 
-  Task.empty()
-      : title = "",
-        rooms = [],
-        frequency = FrequencyEnum.everyTime;
-
-// String? TaskToJson(Task task) {
-//     return (task.isNotEmpty)
-//         ? json.encode(task.map((Task) => Task.toJson()).toList(),
-//             toEncodable: myDateSerializer)
-//         : null;
-//}
   @override
   Map<String, dynamic> toJson() {
     final data = super.toJson();
@@ -41,15 +34,17 @@ class Task extends ModelClass<Task> {
     data['description'] = description;
     data['img'] = img;
     data['categories'] = jsonEncode(categories);
-    data['roomjson'] = rooms?.toList();
-    data['frequency'] = frequency.index;
+    data['roomId'] = roomId;
+    data['frequency'] = enumToString(frequency.toString());
     return data;
   }
 
   Task.fromJson(Map<String, dynamic> mjson)
       : title = mjson['title'],
-        rooms = mjson['rooms'],
-        frequency = FrequencyEnum.values[mjson['frequency']],
+        roomId = mjson['room'],
+        frequency = enumFromString<FrequencyEnum>(
+                mjson['frequency'], FrequencyEnum.values) ??
+            FrequencyEnum.everyTime,
         description = mjson['description'],
         categories = jsonDecode(mjson['categories']),
         img = mjson['img'] {
@@ -66,13 +61,15 @@ class InsTask extends Task {
     this.active = true,
     id,
     title,
-    rooms,
+    roomId,
     frequency,
-  }) : super(title: title, rooms: rooms, frequency: frequency);
-  InsTask.empty()
-      : listId = "",
-        active = true,
-        super.empty();
+  }) : super(title: title, roomId: roomId, frequency: frequency);
+  static InsTask get empty => InsTask(
+      listId: '',
+      active: true,
+      title: '',
+      roomId: '',
+      frequency: FrequencyEnum.everyTime);
 
   @override
   Map<String, dynamic> toJson() {

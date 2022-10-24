@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cleanedapp/room/room_controller.dart';
 import 'package:cleanedapp/room/room_model.dart';
+import 'package:cleanedapp/task/task_model.dart';
 import 'package:cleanedapp/user/be_user_model.dart';
 import 'package:cleanedapp/user/user_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -125,7 +126,9 @@ class BeUserController {
     }
   }
 
-  Future<void> updateRoomOfUser(Room room, {addMode = false}) async {
+  Future<void> updateRoomOfUser(
+    Room room,
+  ) async {
     if (!room.validate) throw "room not valid";
     final index = user.rooms.indexWhere((element) => element.id == room.id);
     if (index >= 0) {
@@ -134,9 +137,7 @@ class BeUserController {
       user.rooms = [room] + user.rooms;
     }
     try {
-      await updateBeUser(userid,
-          fieldName: "rooms", fieldValue: user.listToJson(user.rooms));
-      RoomController().updateRooms(user.rooms);
+      await updateRoomListOfUser(user.rooms);
     } catch (e) {
       rethrow;
     }
@@ -147,6 +148,44 @@ class BeUserController {
     if (index > -1) {
       try {
         user.rooms.removeAt(index);
+        await BeUserController().updateRoomListOfUser(user.rooms);
+      } catch (e) {
+        rethrow;
+      }
+    } else {
+      log("room with id $room.id cannot be found");
+      throw "error";
+    }
+  }
+
+  ///-------Tasks------
+
+  Future<void> updateTaskOfRoom(Room room, Task task) async {
+    if (!task.validate) throw "task not valid";
+    final index = room.roomTasks.indexWhere((element) => element.id == task.id);
+    if (index >= 0) {
+      room.roomTasks[index] = task;
+    } else {
+      room.roomTasks = [task] + room.roomTasks;
+    }
+    try {
+      await updateRoomOfUser(room);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateListTaskOfRoom(Room room, List<Task> tasks) async {
+    room.roomTasks = tasks;
+
+    return await updateRoomOfUser(room);
+  }
+
+  Future<void> deleteRoomTask(Room room, Task task) async {
+    final index = room.roomTasks.indexWhere((element) => element.id == task.id);
+    if (index > -1) {
+      try {
+        room.roomTasks.removeAt(index);
         await BeUserController().updateRoomListOfUser(user.rooms);
       } catch (e) {
         rethrow;

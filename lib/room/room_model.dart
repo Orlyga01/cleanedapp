@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cleanedapp/task/task_model.dart';
+import 'package:cleanedapp/misc/categories_mode.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:sharedor/common_functions.dart';
@@ -10,9 +12,11 @@ class Room extends ModelClass<Room> {
   String? categoryJson;
   String? description;
   int? order;
+  List<Task> roomTasks = [];
 
   Room({
     id,
+    required this.roomTasks,
     this.order,
     required this.title,
     this.description,
@@ -21,16 +25,12 @@ class Room extends ModelClass<Room> {
     modifiedAt,
   }) : super(id: id, createdAt: createdAt, modifiedAt: modifiedAt);
 
-  @override
-  static Room get empty =>
-      Room(id: '', title: 'Bedroom', type: RoomType.bedroom, order: 0);
-
-  dynamic myDateSerializer(dynamic object) {
-    if (object is DateTime) {
-      return object.toIso8601String();
-    }
-    return object;
-  }
+  static Room get empty => Room(
+      id: '',
+      title: 'Bedroom',
+      type: RoomType.bedroom,
+      order: 0,
+      roomTasks: []);
 
   bool get validate => !title.isEmptyBe && type != null;
 
@@ -74,6 +74,7 @@ class Room extends ModelClass<Room> {
         rooms.add(
           Room.empty
             ..type = element
+            ..roomTasks = initialTaskList[element]!
             ..title = RoomTypes[element]!.name!,
         );
       }
@@ -156,17 +157,88 @@ Map<RoomType, GenericInfoEnum> RoomTypes = {
 List<Room> testRooms = [
   Room.empty
     ..type = RoomType.kitchen
+    ..roomTasks = initialTaskList[RoomType.kitchen]!
     ..title = RoomTypes[RoomType.kitchen]!.name!,
   Room.empty
     ..type = RoomType.livingRoom
+    ..roomTasks = initialTaskList[RoomType.livingRoom]!
     ..title = RoomTypes[RoomType.livingRoom]!.name!,
   Room.empty
     ..type = RoomType.masterBedroom
+    ..roomTasks = initialTaskList[RoomType.masterBedroom]!
     ..title = RoomTypes[RoomType.masterBedroom]!.name!,
   Room.empty
     ..type = RoomType.bathroom
+    ..roomTasks = initialTaskList[RoomType.bathroom]!
     ..title = RoomTypes[RoomType.bathroom]!.name!,
   Room.empty
     ..type = RoomType.studyRoom
+    ..roomTasks = initialTaskList[RoomType.studyRoom]!
     ..title = RoomTypes[RoomType.studyRoom]!.name!,
+];
+Map<RoomType, List<Task>> initialTaskList = {
+  RoomType.bathroom: [
+    Task(
+        title: "Mirrors", frequency: FrequencyEnum.everyTime, id: generateId()),
+    Task(
+        title: "Toilet Seat",
+        frequency: FrequencyEnum.everyTime,
+        id: generateId()),
+    Task(title: "Floor", frequency: FrequencyEnum.everyTime, id: generateId()),
+    Task(
+        title: "Shower inside",
+        frequency: FrequencyEnum.everyTime,
+        id: generateId()),
+    Task(
+        title: "Glass doors", frequency: FrequencyEnum.month, id: generateId()),
+    Task(title: "Sink", frequency: FrequencyEnum.month, id: generateId()),
+  ],
+  RoomType.bedroom: basicAllRooms +
+      [
+        Task(
+            title: "Change Sheets",
+            frequency: FrequencyEnum.everySecondTime,
+            id: generateId()),
+      ],
+  RoomType.masterBedroom: basicAllRooms +
+      [
+        Task(
+            title: "Change Sheets",
+            frequency: FrequencyEnum.everySecondTime,
+            id: generateId()),
+      ],
+  RoomType.kitchen: basicAllRooms +
+      [
+        Task(
+            title: "Sink",
+            frequency: FrequencyEnum.everyTime,
+            id: generateId()),
+        Task(
+            title: "Electric instument on the counter",
+            frequency: FrequencyEnum.everyTime,
+            id: generateId()),
+        Task(
+            title: "Microwave and oven",
+            frequency: FrequencyEnum.everyTime,
+            id: generateId()),
+        Task(
+            title: "Drawers", frequency: FrequencyEnum.month, id: generateId()),
+      ],
+  RoomType.diningRoom: basicAllRooms,
+  RoomType.studyRoom: basicAllRooms,
+  RoomType.livingRoom: basicAllRooms,
+  RoomType.familyRoom: basicAllRooms,
+  RoomType.laundryRoom: basicAllRooms
+};
+List<Task> basicAllRooms = [
+  Task(title: "Windows", frequency: FrequencyEnum.month, id: generateId()),
+  Task(
+      title: "Aircondition filter",
+      frequency: FrequencyEnum.halfAYear,
+      id: generateId()),
+  Task(title: "Floor", frequency: FrequencyEnum.everyTime, id: generateId()),
+  Task(
+      title: "Electric shulters",
+      frequency: FrequencyEnum.halfAYear,
+      id: generateId()),
 ];

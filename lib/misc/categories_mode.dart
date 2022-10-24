@@ -1,4 +1,12 @@
-enum FrequencyEnum { everyTime, twoWeeks, month, halfAYear, year }
+enum FrequencyEnum {
+  everyTime,
+  twoWeeks,
+  month,
+  halfAYear,
+  year,
+  extra,
+  everySecondTime
+}
 
 Map<dynamic, String> mapEnumToString(String enumName, List<String> list) {
   switch (enumName) {

@@ -1,11 +1,13 @@
 import 'dart:async';
 
-import 'package:cleanedapp/Task/task_model.dart';
+import 'package:authentication/authentication.dart';
+import 'package:cleanedapp/task/task_model.dart';
 import 'package:cleanedapp/room/room_model.dart';
+import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RoomController {
-  static final RoomController _roomC =  RoomController._internal();
+  static final RoomController _roomC = RoomController._internal();
   // FirebaseMeetingRepository _meetingRepository = FirebaseMeetingRepository();
 
   RoomController._internal();
@@ -42,13 +44,16 @@ class RoomController {
     listRoom.sink.add(_list);
   }
 
-  List<Task> getTaskByRoom(String room) {
-    return [];
+  Room getRoomById(String roomId) {
+    return BeUserController()
+        .user
+        .rooms
+        .firstWhere((element) => element.id == roomId);
   }
+
+  final streamUserRooms = StreamProvider.autoDispose<List<Room>>((ref) {
+    ref.onDispose(() => print("controller for uid was disposed"));
+
+    return RoomController().getRooms;
+  });
 }
-
-final streamUserRooms = StreamProvider.autoDispose<List<Room>>((ref) {
-  ref.onDispose(() => print("controller for uid was disposed"));
-
-  return RoomController().getRooms;
-});

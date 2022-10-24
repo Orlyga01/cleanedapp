@@ -1,16 +1,15 @@
 import 'dart:async';
-import 'package:cleanedapp/Task/task_model.dart';
+import 'package:cleanedapp/task/task_model.dart';
 import 'package:cleanedapp/helpers/locator.dart';
 import 'package:cleanedapp/tasks_list/task_list_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TaskListController {
   TaskListController();
-  final StreamController<TaskList> listItems =
-      StreamController<TaskList>();
+  final StreamController<TaskList> listItems = StreamController<TaskList>();
   Stream<TaskList> get getTaskList => listItems.stream;
   //UserController repository = locator.get<UserController>();
-  TaskList _list = TaskList.empty();
+  TaskList _list = TaskList.empty;
 
   Future<void> setCurrentTaskList(TaskList list) async {
     _list = list;
