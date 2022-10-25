@@ -36,7 +36,22 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    List<Widget> lw = formFields();
+
+    return Form(
+        key: GlobalKey<FormState>(),
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(8),
+              itemCount: lw.length,
+              itemBuilder: (BuildContext context, int index) {
+                return lw[index];
+              }),
+        ));
   }
 
   @override

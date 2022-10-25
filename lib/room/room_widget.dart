@@ -19,6 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class RoomWidget extends StatefulWidget {
   final Function(Room)? onChanged;
   bool readOnly;
+  bool? showRoomTitle;
   final Room room;
   bool changed = false;
   GlobalKey<FormState> formKey;
@@ -27,6 +28,7 @@ class RoomWidget extends StatefulWidget {
       this.onChanged,
       required this.formKey,
       this.readOnly = false,
+      this.showRoomTitle,
       Room? room})
       : room = room ?? Room.empty,
         super(key: key);
@@ -64,6 +66,13 @@ class _RoomWidgetState extends State<RoomWidget> {
     List<Widget> lw;
     if (widget.readOnly) {
       lw = [
+        if (widget.showRoomTitle == true)
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Text(widget.room.title, style: BeStyle.H1),
+            ),
+          ),
         LabelAndField(
             label: "Type".ctr(),
             icon: RoomTypes[widget.room.type]!.icon ?? Icons.abc_outlined,

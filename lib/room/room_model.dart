@@ -40,6 +40,8 @@ class Room extends ModelClass<Room> {
     data['title'] = title;
     data['order'] = order;
     data['description'] = description;
+    data['roomTasks'] = listToJson(roomTasks);
+
     data['type'] = enumToString(type.toString());
 
     return data;
@@ -53,6 +55,8 @@ class Room extends ModelClass<Room> {
     title = mjson['title'];
     order = mjson['order'];
     description = mjson['description'];
+    roomTasks = Task.empty.listFromJson(mjson['roomTasks']) ?? [];
+
     type = enumFromString(mjson['type'], RoomType.values) ?? RoomType.bathroom;
   }
 

@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:authentication/authentication.dart';
-import 'package:cleanedapp/task/task_model.dart';
 import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,9 +49,9 @@ class RoomController {
         .firstWhere((element) => element.id == roomId);
   }
 
-  final streamUserRooms = StreamProvider.autoDispose<List<Room>>((ref) {
-    ref.onDispose(() => print("controller for uid was disposed"));
+  // final streamUserRooms = StreamProvider.autoDispose<List<Room>>((ref) {
+  //   ref.onDispose(() => print("controller for uid was disposed"));
 
-    return RoomController().getRooms;
-  });
+  //   return RoomController().getRooms;
+  // });
 }

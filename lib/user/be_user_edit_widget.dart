@@ -39,33 +39,30 @@ class _BeUserEditWidgetState extends State<BeUserEditWidget> {
                 decoration: StyleF.fromBox,
                 child: Column(
                   children: [
-                    Row(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Flexible(
-                          flex: 2,
-                          child: Column(children: [
-                            PhoneField(context,
-                                withLable: false,
-                                bgTransparent: true, onChanged: (String value) {
-                              widget.user.phoneNo = value;
-                            }),
-                            if (showName)
-                              Column(
-                                children: [
-                                  NameField(context,
-                                      withLable: false, bgTransparent: true,
-                                      onChanged: (String value) {
-                                    widget.user.name = value;
-                                  }),
-                                  Text(
-                                    "Please set your name and we are good to go"
-                                        .ctr(),
-                                  ),
-                                ],
-                              ),
-                          ]),
-                        ),
+                        Column(children: [
+                          PhoneField(context,
+                              withLable: false,
+                              bgTransparent: true, onChanged: (String value) {
+                            widget.user.phoneNo = value;
+                          }),
+                          if (showName)
+                            Column(
+                              children: [
+                                NameField(context,
+                                    withLable: false, bgTransparent: true,
+                                    onChanged: (String value) {
+                                  widget.user.name = value;
+                                }),
+                                Text(
+                                  "Please set your name and we are good to go"
+                                      .ctr(),
+                                ),
+                              ],
+                            ),
+                        ]),
                         const SizedBox(width: 10),
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),

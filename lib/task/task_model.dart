@@ -50,6 +50,11 @@ class Task extends ModelClass<Task> {
         img = mjson['img'] {
     super.fromJson(mjson);
   }
+  List<Task>? listFromJson(List<dynamic>? list) {
+    return (list != null && list.isNotEmpty)
+        ? list.map((task) => Task.fromJson(task)).toList()
+        : null;
+  }
 }
 
 class InsTask extends Task {

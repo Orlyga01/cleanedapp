@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cleanedapp/export_all_ui.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/master_page.dart';
 import 'package:cleanedapp/misc/providers.dart';
@@ -159,6 +160,16 @@ class RoomListWidgetState extends State<RoomListWidget> {
             children: [
               ExapndableInList<Room>(
                   item: item,
+                  extraActions: [
+                    IconButton(
+                        padding: const EdgeInsetsDirectional.only(end: 8),
+                        constraints: const BoxConstraints(),
+                        onPressed: () async {
+                          Navigator.pushNamed(context, "tasklist",
+                              arguments: {"roomid": item.id});
+                        },
+                        icon: const Icon(LineAwesomeIcons.tasks)),
+                  ],
                   leading:
                       Icon(RoomTypes[item.type]!.icon ?? Icons.abc_outlined),
                   title: Text(item.title),
@@ -179,9 +190,10 @@ class RoomListWidgetState extends State<RoomListWidget> {
     Room emptyroom = Room.empty;
     _rows = <Widget>[
           Container(
-            key: ValueKey('0'),
+            key: const ValueKey('0'),
             child: NewObjectInList<Room>(
                 item: emptyroom,
+                addTitle: "Add room",
                 formkey: widget._formkey,
                 //  onClick: (Room item) => ,
                 addRoomMode: true,

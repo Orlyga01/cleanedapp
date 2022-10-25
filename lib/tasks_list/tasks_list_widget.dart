@@ -18,19 +18,18 @@ import 'package:sharedor/widgets/expanded_inside_list.dart';
 
 class TaskListWidget extends StatefulWidget {
   late final List<Task> tasks;
-  final String roomId;
-  late Room room;
+  final Room room;
   bool? updateTaskMode = true;
   bool tileExpanded = false;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   TaskListWidget({
     Key? key,
-    required this.roomId,
+    required this.room,
   }) : super(key: key);
   @override
   State<TaskListWidget> createState() => TaskListWidgetState();
-  }
+}
 
 class TaskListWidgetState extends State<TaskListWidget> {
   late Map<String, GlobalKey<FormState>> gkTask = {};
@@ -41,17 +40,16 @@ class TaskListWidgetState extends State<TaskListWidget> {
 
   @override
   void initState() {
-    widget.room = RoomController().getRoomById(widget.roomId);
     List<Task> tasks = widget.room.roomTasks;
 
     for (var item in tasks) {
+      print(item.id);
       gkTask[item.id] = GlobalKey<FormState>();
     }
 
     super.initState();
   }
 
-  
   @override
   Widget build(BuildContext context) {
     // Make sure there is a scroll controller attached to the scroll view that contains ReorderableSliverList.
@@ -86,7 +84,7 @@ class TaskListWidgetState extends State<TaskListWidget> {
                   formkey: widget._formkey,
                   onClickDelete: (Task item) => deleteTask(item, context),
                   expandedChild: TaskWidget(
-                    formKey: GlobalKey<FormState>(),
+                    formKey: gkTask[item.id]!,
                     task: tasks[index],
                     onChanged: (Task item) {
                       tasks[index] = item;
@@ -100,9 +98,10 @@ class TaskListWidgetState extends State<TaskListWidget> {
     Task emptytask = Task.empty;
     _rows = <Widget>[
           Container(
-            key: ValueKey('0'),
+            key: const ValueKey('10'),
             child: NewObjectInList<Task>(
                 item: emptytask,
+                addTitle: "Add task",
                 formkey: widget._formkey,
                 //  onClick: (Task item) => ,
                 expandedChild: TaskWidget(
@@ -137,6 +136,7 @@ class TaskListWidgetState extends State<TaskListWidget> {
       // _rows.insert(newIndex, row);
     });
   }
+
   Future<void> updateTask(Task task) async {
     try {
       await BeUserController().updateTaskOfRoom(widget.room, task);
@@ -167,5 +167,4 @@ class TaskListWidgetState extends State<TaskListWidget> {
 
     return true;
   }
-
 }
