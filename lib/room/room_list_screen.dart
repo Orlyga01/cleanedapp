@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:flutter/material.dart';
 import 'package:cleanedapp/export_all_ui.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/master_page.dart';
@@ -8,7 +8,6 @@ import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/room/room_widget.dart';
 import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:cleanedapp/user/be_user_edit_widget.dart';
-import 'package:flutter/material.dart';
 import 'package:sharedor/export_common.dart';
 import 'package:sharedor/external_export_view.dart';
 import 'package:sharedor/helpers/export_helpers.dart';
@@ -153,11 +152,10 @@ class RoomListWidgetState extends State<RoomListWidget> {
       (int index) {
         Room item = rooms[index];
         return Container(
+          color: Colors.greenAccent,
           key: ValueKey(item.id),
           child:
               //Text("id:" + (rooms[index].id)
-              Column(
-            children: [
               ExapndableInList<Room>(
                   item: item,
                   extraActions: [
@@ -172,7 +170,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
                   ],
                   leading:
                       Icon(RoomTypes[item.type]!.icon ?? Icons.abc_outlined),
-                  title: Text(item.title),
+                  title: Container(color: Colors.blue, child: Text(item.title)),
                   formkey: widget._formkey,
                   onClickDelete: (Room item) => deleteRoom(item, context),
                   expandedChild: RoomWidget(
@@ -182,8 +180,6 @@ class RoomListWidgetState extends State<RoomListWidget> {
                       rooms[index] = item;
                     },
                   )),
-            ],
-          ),
         );
       },
     );

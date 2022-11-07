@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/misc/providers.dart';
-import 'package:cleanedapp/room/room_controller.dart';
 import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/task/task_model.dart';
 import 'package:cleanedapp/task/task_widget.dart';
@@ -16,16 +15,20 @@ import 'package:reorderables/reorderables.dart';
 import 'package:sharedor/widgets/first_row_list_add.dart';
 import 'package:sharedor/widgets/expanded_inside_list.dart';
 
+// widget has two modes, the edit mode and the mode where the tasks are shown inside the room list,
+// difference: rows are shrinked, active-nonactive state, and show description in visible
 class TaskListWidget extends StatefulWidget {
   late final List<Task> tasks;
   final Room room;
   bool? updateTaskMode = true;
   bool tileExpanded = false;
+  final bool? listInRoomMode;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   TaskListWidget({
     Key? key,
     required this.room,
+    this.listInRoomMode = false,
   }) : super(key: key);
   @override
   State<TaskListWidget> createState() => TaskListWidgetState();
@@ -37,13 +40,11 @@ class TaskListWidgetState extends State<TaskListWidget> {
   bool editState = false;
 
   //     if (room != null) TaskController().setCurrentTaskList(room!.tasks);
-
   @override
   void initState() {
     List<Task> tasks = widget.room.roomTasks;
 
     for (var item in tasks) {
-      print(item.id);
       gkTask[item.id] = GlobalKey<FormState>();
     }
 
@@ -54,11 +55,9 @@ class TaskListWidgetState extends State<TaskListWidget> {
   Widget build(BuildContext context) {
     // Make sure there is a scroll controller attached to the scroll view that contains ReorderableSliverList.
     // Otherwise an error will be thrown.
-
     return Consumer(builder: (consumercontext, listen, child) {
       listen(userStateChanged);
       return SizedBox(
-        height: GlobalParametersFM().screenSize.height,
         child: Column(children: [
           buildListTask(widget.room.roomTasks),
         ]),
@@ -73,16 +72,44 @@ class TaskListWidgetState extends State<TaskListWidget> {
       (int index) {
         Task item = tasks[index];
         return Container(
+          padding: EdgeInsets.zero,
+          decoration:
+              index != tasks.length - 1 ? BeStyle.boxDecorationBottom : null,
           key: ValueKey(item.id),
           child:
               //Text("id:" + (tasks[index].id)
-              Column(
-            children: [
               ExapndableInList<Task>(
                   item: item,
-                  title: Text(item.title),
-                  formkey: widget._formkey,
-                  onClickDelete: (Task item) => deleteTask(item, context),
+                  showEdit: false,
+                  shrinkMode: true,
+                  slideExpandCollapse: true,
+                  title: Row(
+                    children: [
+                      Checkbox(
+                          value: item.active ?? true,
+                          onChanged: (value) {
+                            setState(() {
+                              item.active = value;
+                            });
+                          }),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(item.title,
+                              style: widget.listInRoomMode!
+                                  ? BeStyle.secondaryTitleStyle
+                                  : BeStyle.H2),
+                          if (widget.listInRoomMode! &&
+                              item.description != null)
+                            Text(
+                              style: BeStyle.secondaryTitleStyle,
+                              item.description!,
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  formkey: GlobalKey(),
                   expandedChild: TaskWidget(
                     formKey: gkTask[item.id]!,
                     task: tasks[index],
@@ -90,34 +117,41 @@ class TaskListWidgetState extends State<TaskListWidget> {
                       tasks[index] = item;
                     },
                   )),
-            ],
-          ),
         );
       },
     );
     Task emptytask = Task.empty;
-    _rows = <Widget>[
-          Container(
-            key: const ValueKey('10'),
-            child: NewObjectInList<Task>(
-                item: emptytask,
-                addTitle: "Add task",
-                formkey: widget._formkey,
-                //  onClick: (Task item) => ,
-                expandedChild: TaskWidget(
-                  formKey: widget._formkey,
-                  task: emptytask,
-                  onChanged: (Task item) {
-                    emptytask = item;
-                  },
-                )),
-          )
-        ] +
-        _rows;
-    return ReorderableColumn(
+    if (widget.listInRoomMode != true) {
+      _rows = <Widget>[
+            Container(
+              key: const ValueKey('10'),
+              child: NewObjectInList<Task>(
+                  item: emptytask,
+                  addTitle: "Add task",
+                  formkey: widget._formkey,
+                  //  onClick: (Task item) => ,
+                  expandedChild: TaskWidget(
+                    formKey: widget._formkey,
+                    task: emptytask,
+                    onChanged: (Task item) {
+                      emptytask = item;
+                    },
+                  )),
+            )
+          ] +
+          _rows;
+    }
+    return ListView(
+      shrinkWrap: true,
       children: _rows,
-      onReorder: _onReorder,
+      padding: EdgeInsets.zero,
     );
+// no need to reorder final list
+    // return ReorderableColumn(
+    //   padding: EdgeInsets.zero,
+    //   children: _rows,
+    //   onReorder: _onReorder,
+    // );
   }
 
   void _onReorder(int oldIndex, int newIndex) {

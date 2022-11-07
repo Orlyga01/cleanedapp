@@ -53,11 +53,12 @@ class CustomTheme {
 
         //primaryColor: StyleF.darkermain,
         primaryColor: StyleF.darkermain,
+        visualDensity: VisualDensity(vertical: -4),
         primarySwatch: MaterialColor(0xFF0098A7, color),
         // highlightColor: BeStyle.mainMiddle,
         // listTileTheme: const ListTileThemeData(
         //     //contentPadding: EdgeInsets.all(0),
-        //     : true),
+        //     dense: true),
         textTheme: TextThemeLang,
         appBarTheme: const AppBarTheme(
           iconTheme: IconThemeData(

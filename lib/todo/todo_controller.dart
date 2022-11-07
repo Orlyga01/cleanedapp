@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cleanedapp/task/task_model.dart';
 import 'package:cleanedapp/helpers/locator.dart';
-import 'package:cleanedapp/tasks_list/task_list_model.dart';
+import 'package:cleanedapp/todo/todo_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TaskListController {

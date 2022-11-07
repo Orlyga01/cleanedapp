@@ -173,7 +173,6 @@ class _RoomWidgetState extends State<RoomWidget> {
 
   Future<bool> saveRoom(Room room, BuildContext context,
       {bool? addMode = false}) async {
-    print(room.type);
     bool? isValid;
     isValid = widget.formKey.currentState?.validate();
     if (isValid == false) return false;

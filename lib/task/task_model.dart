@@ -10,6 +10,7 @@ class Task extends ModelClass<Task> {
   String? img;
   String? roomId;
   FrequencyEnum frequency;
+  bool? active;
 
   Task({
     id,
@@ -19,6 +20,7 @@ class Task extends ModelClass<Task> {
     this.description,
     this.roomId,
     this.img,
+    this.active = true,
     createdAt,
     modifiedAt,
   }) : super(id: id, createdAt: createdAt, modifiedAt: modifiedAt);
@@ -35,6 +37,7 @@ class Task extends ModelClass<Task> {
     data['img'] = img;
     data['categories'] = jsonEncode(categories);
     data['roomId'] = roomId;
+    data['active'] = active;
     data['frequency'] = enumToString(frequency.toString());
     return data;
   }
@@ -47,6 +50,7 @@ class Task extends ModelClass<Task> {
             FrequencyEnum.everyTime,
         description = mjson['description'],
         categories = jsonDecode(mjson['categories']),
+        active = mjson['active']?? true,
         img = mjson['img'] {
     super.fromJson(mjson);
   }

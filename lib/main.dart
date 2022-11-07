@@ -7,6 +7,7 @@ import 'package:cleanedapp/helpers/route.dart';
 import 'package:cleanedapp/helpers/locator.dart';
 import 'package:cleanedapp/room/room_list_screen.dart';
 import 'package:cleanedapp/theme.dart';
+import 'package:cleanedapp/todo/todo_screen.dart';
 import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:sharedor/helpers/device.dart';
 import 'package:sharedor/helpers/dynamic_link_service.dart';
@@ -22,6 +23,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:sharedor/helpers/global_parameters.dart';
 import 'package:sharedor/helpers/secureStorage.dart';
 import 'package:sharedor/widgets/export_widgets.dart';
+import 'package:translator/translator.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -33,6 +35,7 @@ void main() async {
   await EasyLocalization.ensureInitialized();
 
   await PreferenceUtils().init();
+  final translator = GoogleTranslator();
 
 // global RouteObserver
   final RouteObserver<PageRoute> routeObserver = new RouteObserver<PageRoute>();
@@ -193,7 +196,7 @@ class _FamilyMMenuApp extends State<FamilyMMenuApp>
               backgroundColor: Colors.white,
               duration: 2500,
               splashIconSize: GlobalParametersFM().screenSize.height,
-              nextScreen: RoomListScreen(),
+              nextScreen: ToDoScreen(),
               splash: SizedBox.shrink())),
     );
   }

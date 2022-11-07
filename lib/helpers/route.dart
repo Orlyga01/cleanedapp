@@ -3,7 +3,7 @@ import 'package:authentication/authenticate/Widgets/login_page.dart';
 import 'package:authentication/shared/auth_widgets.dart';
 import 'package:authentication/user/providers/user_provider.dart';
 import 'package:cleanedapp/room/room_list_screen.dart';
-import 'package:cleanedapp/tasks_list/task_list_screen.dart';
+import 'package:cleanedapp/misc/room_tasks_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sharedor/helpers/dynamic_link_service.dart';

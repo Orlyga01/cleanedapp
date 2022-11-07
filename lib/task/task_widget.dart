@@ -42,15 +42,19 @@ class _TaskWidgetState extends State<TaskWidget> {
         key: GlobalKey<FormState>(),
         child: Container(
           padding: const EdgeInsets.all(8),
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(8),
-              itemCount: lw.length,
-              itemBuilder: (BuildContext context, int index) {
-                return lw[index];
-              }),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(8),
+                    itemCount: lw.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return lw[index];
+                    }),
+              ),
+            ],
+          ),
         ));
   }
 

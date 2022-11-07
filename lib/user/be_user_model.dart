@@ -1,5 +1,5 @@
 import 'package:cleanedapp/room/room_model.dart';
-import 'package:cleanedapp/tasks_list/task_list_model.dart';
+import 'package:cleanedapp/todo/todo_model.dart';
 import 'package:sharedor/misc/model_class.dart';
 
 class BeUser extends ModelClass<BeUser> {

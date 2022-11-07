@@ -2,7 +2,7 @@ import 'package:authentication/shared/locator.dart';
 
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/helpers/local_storage.dart';
-import 'package:cleanedapp/tasks_list/task_list_controller.dart';
+import 'package:cleanedapp/todo/todo_controller.dart';
 
 import 'package:get_it/get_it.dart';
 
