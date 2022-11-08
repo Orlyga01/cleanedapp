@@ -44,5 +44,5 @@ class TaskListController {
 
 final streamTask = StreamProvider.autoDispose<TaskList>((ref) {
   ref.onDispose(() => print("controller for uid was disposed"));
-  return locator.get<TaskListController>().getTaskList;
+  return TaskListController().getTaskList;
 });

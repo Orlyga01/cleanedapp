@@ -53,7 +53,6 @@ void main() async {
 //     // await SystemSettingsController().setSystemSettings();
 //   } catch (e) {
 //   }
-  await setupServices();
   // await locator.get<UserController>().setCurrentUser(familyid: "12345");
   // await FirebaseUserRoomsRepository(userid: "123").addInitialRoomsList();
   runApp(EasyLocalization(

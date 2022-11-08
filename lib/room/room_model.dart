@@ -188,26 +188,34 @@ Map<RoomType, List<Task>> initialTaskList = {
         title: "Toilet Seat",
         frequency: FrequencyEnum.everyTime,
         id: generateId()),
-    Task(title: "Floor", frequency: FrequencyEnum.everyTime, id: generateId()),
     Task(
-        title: "Shower inside",
+        title: "Mop and loor",
         frequency: FrequencyEnum.everyTime,
         id: generateId()),
     Task(
-        title: "Glass doors", frequency: FrequencyEnum.month, id: generateId()),
-    Task(title: "Sink", frequency: FrequencyEnum.month, id: generateId()),
+        title: "Internal shower/bathtab",
+        frequency: FrequencyEnum.everyTime,
+        id: generateId()),
+    Task(
+        title: "Shower glass doors",
+        frequency: FrequencyEnum.month,
+        id: generateId()),
+    Task(
+        title: "Bathroom sink",
+        frequency: FrequencyEnum.month,
+        id: generateId()),
   ],
   RoomType.bedroom: basicAllRooms +
       [
         Task(
-            title: "Change Sheets",
+            title: "Change bad sheets",
             frequency: FrequencyEnum.everySecondTime,
             id: generateId()),
       ],
   RoomType.masterBedroom: basicAllRooms +
       [
         Task(
-            title: "Change Sheets",
+            title: "Change bad sheets",
             frequency: FrequencyEnum.everySecondTime,
             id: generateId()),
       ],
@@ -235,14 +243,20 @@ Map<RoomType, List<Task>> initialTaskList = {
   RoomType.laundryRoom: basicAllRooms
 };
 List<Task> basicAllRooms = [
-  Task(title: "Windows", frequency: FrequencyEnum.month, id: generateId()),
+  Task(
+      title: "Clean windows glass and frame",
+      frequency: FrequencyEnum.month,
+      id: generateId()),
   Task(
       title: "Aircondition filter",
       frequency: FrequencyEnum.halfAYear,
       id: generateId()),
-  Task(title: "Floor", frequency: FrequencyEnum.everyTime, id: generateId()),
   Task(
-      title: "Electric shulters",
+      title: "Sweep and mop the floor",
+      frequency: FrequencyEnum.everyTime,
+      id: generateId()),
+  Task(
+      title: "Electric switches",
       frequency: FrequencyEnum.halfAYear,
       id: generateId()),
 ];

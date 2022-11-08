@@ -6,12 +6,14 @@ import 'package:cleanedapp/master_page.dart';
 import 'package:cleanedapp/misc/providers.dart';
 import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/room/room_widget.dart';
+import 'package:cleanedapp/task/task_model.dart';
 import 'package:cleanedapp/todo/todo_widget.dart';
 import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:sharedor/export_common.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:sharedor/widgets/expanded_inside_list.dart';
+import 'package:translator/translator.dart';
 
 import '../user/be_user_model.dart';
 
@@ -72,9 +74,11 @@ class ToDoWidgetState extends State<ToDoWidget> {
   }
 
   setScroll(ScrollController scrollController) {
-    if (scont.hasClients)
+    if (scont.hasClients) {
       scont.animateTo(scont.position.maxScrollExtent,
-          duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.fastOutSlowIn);
+    }
   }
 
   void _onReorder(int oldIndex, int newIndex) {
@@ -94,21 +98,75 @@ class ToDoWidgetState extends State<ToDoWidget> {
     });
   }
 
+  bool reset = true;
+
   @override
   Widget build(BuildContext context) {
     // Make sure there is a scroll controller attached to the scroll view that contains ReorderableSliverList.
     // Otherwise an error will be thrown.
-
     user = BeUserController().user;
     bool initialState = user.name.isEmptyBe;
     return SizedBox(
       height: GlobalParametersFM().screenSize.height,
       child: Column(
         children: [
+          SizedBox(
+            height: 50,
+            child: InkWell(
+              child: const Text("translate"),
+              onTap: () => translate(),
+            ),
+          ),
           Expanded(child: buildListRoom(user.rooms)),
         ],
       ),
     );
+  }
+
+  translate() async {
+    reset = !reset;
+    if (reset) {
+      rooms = rooms = user.rooms;
+      setState(() {});
+      return;
+    }
+
+    final translator = GoogleTranslator();
+    List<String> listTotranslate = [];
+
+    for (Room room in rooms) {
+      listTotranslate += [room.title, room.description ?? '-'];
+      for (Task task in room.roomTasks) {
+        listTotranslate += [task.title, task.description ?? '-'];
+      }
+    }
+
+    var t = await translator.translate(listTotranslate.join(')('),
+        from: 'en', to: 'iw');
+    listTotranslate = t.toString().split(') (');
+
+    int transListCounter = 0;
+    for (var i = 0; i < rooms.length; i++) {
+      rooms[i].title = listTotranslate[transListCounter];
+      rooms[i].description = listTotranslate[transListCounter + 1].trim() == '-'
+          ? null
+          : listTotranslate[transListCounter + 1];
+      transListCounter = transListCounter + 2;
+      for (var j = 0; j < rooms[i].roomTasks.length; j++) {
+        rooms[i].roomTasks[j].title = listTotranslate[transListCounter];
+        rooms[i].roomTasks[j].description =
+            listTotranslate[transListCounter + 1].trim() == '-'
+                ? null
+                : listTotranslate[transListCounter + 1];
+        transListCounter = transListCounter + 2;
+      }
+
+      // transRooms.add(room
+      //   ..title = ''
+      //   ..description = '');
+
+    }
+    setState(() {});
   }
 
   Widget buildListRoom(List<Room> rooms) {

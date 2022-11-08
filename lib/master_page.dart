@@ -1,5 +1,7 @@
 //import 'package:bemember/generic_test.dart';
+
 import 'package:cleanedapp/user/be_user_controller.dart';
+import 'package:cleanedapp/user/be_user_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:sharedor/export_common.dart';
 import 'package:sharedor/helpers/device.dart';
+import 'package:sharedor/helpers/export_helpers.dart';
 import 'dart:ui' as ui;
 import 'package:sharedor/widgets/alerts.dart';
 
@@ -85,7 +88,11 @@ class AppMainTemplate extends StatelessWidget {
                 toolbarHeight: 30,
                 toolbarTextStyle: const TextStyle(color: BeStyle.textColor),
                 toolbarOpacity: 0.8,
-                title: title ?? const SizedBox.expand(),
+                title: Row(
+                  children: [
+                    title ?? const SizedBox.expand(),
+                  ],
+                ),
                 centerTitle: true,
                 leading: nav,
                 actions: actions),
@@ -97,6 +104,11 @@ class AppMainTemplate extends StatelessWidget {
                     BeUserController().clearUser();
                   },
                   child: const Text("Clear User")),
+              InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, "userscreen");
+                  },
+                  child: const Text("User")),
             ],
             //persistentFooterButtons: persistentFooterButtons,
             body: GestureDetector(
@@ -150,9 +162,9 @@ class AppMainTemplate extends StatelessWidget {
                               child: Align(
                                   alignment: FractionalOffset.topCenter,
                                   child: topLeftArea)),
-                        Consumer(builder: (context, ScopedReader watch, child) {
+                        Consumer(builder: (context, WidgetRef ref, child) {
                           AsyncValue<ConnectivityResult> connectivity =
-                              watch(connectivityProvider);
+                              ref.watch(connectivityProvider);
 
                           NetworkProvider()
                               .pageAlertNoConnectivity(context, connectivity);
@@ -165,6 +177,17 @@ class AppMainTemplate extends StatelessWidget {
               ),
             )),
       ],
+    );
+  }
+
+  Widget userTitle(context) {
+    BeUser user = BeUserController().user;
+    if (isHome != true && (user.name ?? '').isEmptyBe) {
+      Navigator.pushNamed(context, "home");
+    }
+
+    return Text(
+      '${"hi".ctr()} ${user.name ?? ''}',
     );
   }
 }

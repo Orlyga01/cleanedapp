@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_context/riverpod_context.dart';
 import 'package:sharedor/export_common.dart';
 
 class Circle {
@@ -75,8 +76,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return Positioned(
       top: circle.position.height,
       left: circle.position.width,
-      child: Consumer(builder: (consumercontext, listen, child) {
-        double opacity = listen(opacityStateChanged).getOpacity(i);
+      child: Consumer(builder: (consumercontext, WidgetRef ref, child) {
+        double opacity = ref.watch(opacityStateChanged).getOpacity(i);
         return Opacity(
           opacity: opacity,
           child: Text("creeate splash screen"),

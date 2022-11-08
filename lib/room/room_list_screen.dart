@@ -8,6 +8,7 @@ import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/room/room_widget.dart';
 import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:cleanedapp/user/be_user_edit_widget.dart';
+import 'package:riverpod_context/riverpod_context.dart';
 import 'package:sharedor/export_common.dart';
 import 'package:sharedor/external_export_view.dart';
 import 'package:sharedor/helpers/export_helpers.dart';
@@ -86,6 +87,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
   Future<bool> deleteRoom(Room room, BuildContext context) async {
     try {
       await BeUserController().deleteUserRoom(room);
+      // ignore: use_build_context_synchronously
       context.read(userStateChanged.notifier).setNotifyUserChange();
     } catch (e) {
       log(e.toString());
@@ -118,8 +120,8 @@ class RoomListWidgetState extends State<RoomListWidget> {
     // Make sure there is a scroll controller attached to the scroll view that contains ReorderableSliverList.
     // Otherwise an error will be thrown.
 
-    return Consumer(builder: (consumercontext, listen, child) {
-      listen(userStateChanged);
+    return Consumer(builder: (consumercontext, WidgetRef ref, child) {
+      ref.watch(userStateChanged);
       user = BeUserController().user;
       bool initialState = user.name.isEmptyBe;
       return SizedBox(

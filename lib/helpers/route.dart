@@ -1,13 +1,14 @@
-import 'package:authentication/authenticate/Widgets/forgot_password.dart';
-import 'package:authentication/authenticate/Widgets/login_page.dart';
-import 'package:authentication/shared/auth_widgets.dart';
-import 'package:authentication/user/providers/user_provider.dart';
+
 import 'package:cleanedapp/room/room_list_screen.dart';
 import 'package:cleanedapp/misc/room_tasks_screen.dart';
+import 'package:cleanedapp/user/be_user_controller.dart';
+import 'package:cleanedapp/user/be_user_model.dart';
+import 'package:cleanedapp/user/user_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sharedor/helpers/dynamic_link_service.dart';
 import 'package:sharedor/helpers/export_helpers.dart';
+import 'package:sharedor/widgets/export_widgets.dart';
 
 class BeRouter {
   Future<void> routeAfterLogin(context, String? actionOnUser) async {
@@ -25,44 +26,19 @@ class BeRouter {
       args = settings.arguments as Map<String, dynamic>;
     }
     switch (settings.name) {
-      case "login":
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (context) {
-            return LoginPage(
-              moreInfo: args,
-              loginInfo: args?["logininfo"],
-            );
-          },
-        );
-      case "reset_password":
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (context) {
-            return ForgotPasswordPage(email: args?["email"]);
-          },
-        );
-
-      case "register":
-        // List<CustomInputFields>? listCustomFields =
-        //     getRegistrationCustomFields();
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (context) {
-            return LoginPage(
-              registerMode: true,
-              loginInfo: args?["logininfo"],
-              //customFields: listCustomFields,
-              // doBeforeRegister: (loginInfo) =>
-              //     setCustomFieldsInFinalParameters(loginInfo, listCustomFields),
-            );
-          },
-        );
+     
       case "roomlist":
         return MaterialPageRoute(
           settings: settings,
           builder: (context) {
             return RoomListScreen();
+          },
+        );
+      case "userscreen":
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) {
+            return UserScreen();
           },
         );
       case "tasklist":
@@ -115,8 +91,8 @@ class BeRouter {
   static Future<void> handleDeepLinks(
       Map<String, dynamic> params, NavigatorState navigator) async {
     if (params["target"] == null) return;
-
-    bool isLoggedIn = UserController().isUserLoggedIn;
+BeUser user =  BeUserController().user;
+    bool isLoggedIn =(user.name??'').isEmpty;
 // We need to store the information berfore continueing
     if (!isLoggedIn) {
       try {
