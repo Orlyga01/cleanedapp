@@ -28,6 +28,7 @@ class RoomListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppMainTemplate(
         isHome: true,
+        inPageTitle: "Manage house cleaning task".ctr(),
         title: const Text("Clean App"),
         floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         children: [
@@ -122,8 +123,8 @@ class RoomListWidgetState extends State<RoomListWidget> {
 
     return Consumer(builder: (consumercontext, WidgetRef ref, child) {
       ref.watch(userStateChanged);
-      user = BeUserController().user;
       bool initialState = user.name.isEmptyBe;
+      print('in$initialState');
       return SizedBox(
         height: GlobalParametersFM().screenSize.height,
         child: Column(

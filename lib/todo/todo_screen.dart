@@ -12,6 +12,7 @@ import 'package:cleanedapp/user/be_user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:sharedor/export_common.dart';
 import 'package:reorderables/reorderables.dart';
+import 'package:sharedor/helpers/export_helpers.dart';
 import 'package:sharedor/widgets/expanded_inside_list.dart';
 import 'package:translator/translator.dart';
 
@@ -25,8 +26,8 @@ class ToDoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppMainTemplate(
-        isHome: true,
-        title: const Text("Clean App"),
+        isHome: false,
+        inPageTitle: '${"Latest list from".ctr()} __/__/__',
         floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         children: [
           ToDoWidget(

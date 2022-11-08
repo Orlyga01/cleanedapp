@@ -25,10 +25,12 @@ class AppMainTemplate extends StatelessWidget {
   final Widget? floatingActionButton;
   final List<Widget>? actions;
   final Widget? topLeftArea;
+  final String? inPageTitle;
   const AppMainTemplate(
       {Key? key,
       required this.children,
       this.title,
+      this.inPageTitle,
       this.actions,
       this.floatingActionButton,
       this.floatingActionButtonLocation,
@@ -42,27 +44,35 @@ class AppMainTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget nav = showBack == true
-        ? IconButton(
-            icon: Icon(
-                Directionality.of(context) == ui.TextDirection.ltr
-                    ? Icons.keyboard_arrow_left
-                    : Icons.keyboard_arrow_right,
-                color: BeStyle.textColor),
-            onPressed: () => areYouSure == true
-                ? showDialogBe(context, "showOKCancelDialog",
-                    onPressOK: () => Navigator.of(context).pop())
-                : Navigator.of(context).pop(),
-          )
-        : (isHome != true)
+    List<Widget> ichildren = [];
+    if (inPageTitle != null) {
+      print("hi");
+      ichildren = [
+        Text(
+          inPageTitle!,
+          style: BeStyle.H1,
+        )
+      ];
+    }
+    ichildren.addAll(children);
+
+    Widget nav = Wrap(
+      children: [
+        showBack == true
             ? IconButton(
-                color: BeStyle.textColorLight,
-                onPressed: () => Navigator.pushNamed(
-                      context,
-                      "clientlist",
-                    ),
-                icon: const Icon(LineAwesomeIcons.home))
-            : const SizedBox.shrink();
+                icon: Icon(
+                    Directionality.of(context) == ui.TextDirection.ltr
+                        ? Icons.keyboard_arrow_left
+                        : Icons.keyboard_arrow_right,
+                    color: BeStyle.textColor),
+                onPressed: () => areYouSure == true
+                    ? showDialogBe(context, "showOKCancelDialog",
+                        onPressOK: () => Navigator.of(context).pop())
+                    : Navigator.of(context).pop(),
+              )
+            : const SizedBox.shrink(),
+      ],
+    );
 
     // ignore: unused_local_variable
     List<Widget>? actionList;
@@ -88,12 +98,13 @@ class AppMainTemplate extends StatelessWidget {
                 toolbarHeight: 30,
                 toolbarTextStyle: const TextStyle(color: BeStyle.textColor),
                 toolbarOpacity: 0.8,
-                title: Row(
-                  children: [
-                    title ?? const SizedBox.expand(),
-                  ],
+                title: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: userTitle(context),
+                  ),
                 ),
-                centerTitle: true,
                 leading: nav,
                 actions: actions),
             floatingActionButton: floatingActionButton,
@@ -135,9 +146,9 @@ class AppMainTemplate extends StatelessWidget {
                           height: GlobalParametersFM().screenSize.height * 0.75,
                           child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: children.length,
+                              itemCount: ichildren.length,
                               itemBuilder: (context, index) {
-                                return children[index];
+                                return ichildren[index];
                               }),
                         ),
                         if (bottomArea != null)
@@ -182,8 +193,9 @@ class AppMainTemplate extends StatelessWidget {
 
   Widget userTitle(context) {
     BeUser user = BeUserController().user;
+
     if (isHome != true && (user.name ?? '').isEmptyBe) {
-      Navigator.pushNamed(context, "home");
+      Future.microtask(() => Navigator.pushNamed(context, "home"));
     }
 
     return Text(

@@ -1,4 +1,3 @@
-
 import 'package:cleanedapp/room/room_list_screen.dart';
 import 'package:cleanedapp/misc/room_tasks_screen.dart';
 import 'package:cleanedapp/user/be_user_controller.dart';
@@ -26,8 +25,7 @@ class BeRouter {
       args = settings.arguments as Map<String, dynamic>;
     }
     switch (settings.name) {
-     
-      case "roomlist":
+      case "home":
         return MaterialPageRoute(
           settings: settings,
           builder: (context) {
@@ -91,8 +89,8 @@ class BeRouter {
   static Future<void> handleDeepLinks(
       Map<String, dynamic> params, NavigatorState navigator) async {
     if (params["target"] == null) return;
-BeUser user =  BeUserController().user;
-    bool isLoggedIn =(user.name??'').isEmpty;
+    BeUser user = BeUserController().user;
+    bool isLoggedIn = (user.name ?? '').isEmpty;
 // We need to store the information berfore continueing
     if (!isLoggedIn) {
       try {
