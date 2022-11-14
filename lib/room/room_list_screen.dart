@@ -16,11 +16,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:sharedor/widgets/first_row_list_add.dart';
 import 'package:sharedor/widgets/expanded_inside_list.dart';
+import 'package:sharedor/widgets/radio_buttons.dart';
 
 import '../user/be_user_model.dart';
 
 class RoomListScreen extends StatelessWidget {
   final GlobalKey<RoomListWidgetState> _key = GlobalKey<RoomListWidgetState>();
+  BeUser user = BeUserController().user;
 
   // ignore: use_key_in_widget_constructors
   RoomListScreen({Key? key});
@@ -116,11 +118,12 @@ class RoomListWidgetState extends State<RoomListWidget> {
     });
   }
 
+  HouseType houseType = HouseType.flat;
+
   @override
   Widget build(BuildContext context) {
     // Make sure there is a scroll controller attached to the scroll view that contains ReorderableSliverList.
     // Otherwise an error will be thrown.
-
     return Consumer(builder: (consumercontext, WidgetRef ref, child) {
       ref.watch(userStateChanged);
       bool initialState = user.name.isEmptyBe;
@@ -138,7 +141,12 @@ class RoomListWidgetState extends State<RoomListWidget> {
                 absorbing: initialState,
                 child: Opacity(
                   opacity: initialState ? 0.4 : 1,
-                  child: buildListRoom(user.rooms),
+                  child: Column(
+                    children: [
+                      listTemplateSelection(),
+                      buildListRoom(user.rooms),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -146,6 +154,18 @@ class RoomListWidgetState extends State<RoomListWidget> {
         ),
       );
     });
+  }
+
+  Widget listTemplateSelection() {
+    if (user.id.isEmptyBe || user.lists.isEmptyBe) return SizedBox.shrink();
+    return RadioButtonWidget(
+        selectedItem: HouseType.flat,
+        items: HouseType.values,
+        onChange: (value) {
+          setSate() {
+            houseType = value;
+          }
+        });
   }
 
   Widget buildListRoom(List<Room> rooms) {
@@ -166,7 +186,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
                         padding: const EdgeInsetsDirectional.only(end: 8),
                         constraints: const BoxConstraints(),
                         onPressed: () async {
-                          Navigator.pushNamed(context, "tasklist",
+                          Navigator.pushNamed(context, "backofficeroom",
                               arguments: {"roomid": item.id});
                         },
                         icon: const Icon(LineAwesomeIcons.tasks)),

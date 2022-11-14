@@ -7,11 +7,11 @@ import 'package:cleanedapp/todo/todo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:sharedor/helpers/export_helpers.dart';
 
-class TaskListScreen extends StatelessWidget {
+class BackOfficeRoomScreen extends StatelessWidget {
   final GlobalKey<TaskListWidgetState> _key = GlobalKey<TaskListWidgetState>();
   final String roomId;
   // ignore: use_key_in_widget_constructors
-  TaskListScreen({Key? key, required this.roomId});
+  BackOfficeRoomScreen({Key? key, required this.roomId});
 
   @override
   Widget build(BuildContext context) {

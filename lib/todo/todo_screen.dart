@@ -19,15 +19,22 @@ import 'package:translator/translator.dart';
 import '../user/be_user_model.dart';
 
 class ToDoScreen extends StatelessWidget {
+  late bool newList;
   final GlobalKey<ToDoWidgetState> _key = GlobalKey<ToDoWidgetState>();
 
   // ignore: use_key_in_widget_constructors
-  ToDoScreen({Key? key});
+  ToDoScreen({Key? key, this.newList = false});
   @override
   Widget build(BuildContext context) {
+    String title;
+    newList = BeUserController().latestList == null ? true : newList;
+    title = newList
+        ? "New generated list".ctr()
+        : '${"Latest list from".ctr()} ${toDate(BeUserController().latestList!.modifiedAt)}';
+
     return AppMainTemplate(
         isHome: false,
-        inPageTitle: '${"Latest list from".ctr()} __/__/__',
+        inPageTitle: title,
         floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         children: [
           ToDoWidget(

@@ -25,7 +25,7 @@ class BeRouter {
       args = settings.arguments as Map<String, dynamic>;
     }
     switch (settings.name) {
-      case "home":
+      case "backofficerooms":
         return MaterialPageRoute(
           settings: settings,
           builder: (context) {
@@ -39,11 +39,11 @@ class BeRouter {
             return UserScreen();
           },
         );
-      case "tasklist":
+      case "backofficeroom":
         return MaterialPageRoute(
           settings: settings,
           builder: (context) {
-            return TaskListScreen(roomId: args?["roomid"]);
+            return BackOfficeRoomScreen(roomId: args?["roomid"]);
           },
         );
       // case "clientlist":

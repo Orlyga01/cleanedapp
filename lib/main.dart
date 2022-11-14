@@ -195,7 +195,9 @@ class _FamilyMMenuApp extends State<FamilyMMenuApp>
               backgroundColor: Colors.white,
               duration: 2500,
               splashIconSize: GlobalParametersFM().screenSize.height,
-              nextScreen: ToDoScreen(),
+              nextScreen: ToDoScreen(
+                newList: false,
+              ),
               splash: SizedBox.shrink())),
     );
   }

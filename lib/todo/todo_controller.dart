@@ -1,31 +1,20 @@
 import 'dart:async';
 import 'package:cleanedapp/task/task_model.dart';
-import 'package:cleanedapp/helpers/locator.dart';
 import 'package:cleanedapp/todo/todo_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TaskListController {
   TaskListController();
-  final StreamController<TaskList> listItems = StreamController<TaskList>();
-  Stream<TaskList> get getTaskList => listItems.stream;
+  final StreamController<TodoList> listItems = StreamController<TodoList>();
+  Stream<TodoList> get getTaskList => listItems.stream;
   //UserController repository = locator.get<UserController>();
-  TaskList _list = TaskList.empty;
+  TodoList _list = TodoList.empty;
 
-  Future<void> setCurrentTaskList(TaskList list) async {
+  Future<void> setCurrentTaskList(TodoList list) async {
     _list = list;
 
     listItems.sink.add(_list);
   }
-
-  // Future<void> saveTaskList() async {
-  //   final menu = locator.get<UserListController>().menu;
-  //   try {
-  //     locator.get<FamilyController>().updateFamily(
-  //         fieldName: "menuJson", fieldValue: TaskList.toJson(menu));
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
 
   void dispose() {
     listItems.close();
@@ -40,9 +29,11 @@ class TaskListController {
   List<Task> getTaskByRoom(String room) {
     return [];
   }
+
+
 }
 
-final streamTask = StreamProvider.autoDispose<TaskList>((ref) {
+final streamTask = StreamProvider.autoDispose<TodoList>((ref) {
   ref.onDispose(() => print("controller for uid was disposed"));
   return TaskListController().getTaskList;
 });

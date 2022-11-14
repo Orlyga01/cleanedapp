@@ -195,7 +195,7 @@ class AppMainTemplate extends StatelessWidget {
     BeUser user = BeUserController().user;
 
     if (isHome != true && (user.name ?? '').isEmptyBe) {
-      Future.microtask(() => Navigator.pushNamed(context, "home"));
+      Future.microtask(() => Navigator.pushNamed(context, "backofficeroom"));
     }
 
     return Text(

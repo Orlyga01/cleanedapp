@@ -31,6 +31,8 @@ class Room extends ModelClass<Room> {
       type: RoomType.bedroom,
       order: 0,
       roomTasks: []);
+  Room get clone =>
+      Room(id: id, title: title, type: type, order: order, roomTasks: []);
 
   bool get validate => !title.isEmptyBe && type != null;
 
@@ -98,6 +100,8 @@ enum RoomType {
   familyRoom,
   laundryRoom
 }
+
+enum HouseType { flat, house, office, airBAndBFlat, airBAndBHouse }
 
 class GenericInfoEnum {
   final String? name;

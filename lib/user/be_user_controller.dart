@@ -4,8 +4,11 @@ import 'dart:developer';
 import 'package:cleanedapp/room/room_controller.dart';
 import 'package:cleanedapp/room/room_model.dart';
 import 'package:cleanedapp/task/task_model.dart';
+import 'package:cleanedapp/todo/todo_model.dart';
 import 'package:cleanedapp/user/be_user_model.dart';
 import 'package:cleanedapp/user/user_repository.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sharedor/helpers/export_helpers.dart';
 
@@ -110,6 +113,87 @@ class BeUserController {
     } catch (e) {
       throw e.toString();
     }
+  }
+
+//------------------Lists-------------------------
+  TodoList? getTaskListById(String? listId) {
+    if (user.lists == null) {
+      print("user lists is still empty");
+      throw "user lists is still empty";
+    }
+    if (listId == null) {
+      return user.lists![0];
+    } else {
+      return user.lists!.firstWhere((element) => element.id == listId);
+    }
+  }
+
+  int createList({String origin = "prev"}) {
+    switch (origin) {
+      case "prev":
+        if (user.lists == null) {
+          user.lists = [
+            TodoList(
+                tasks: convertToInstance(testRooms),
+                userid: userid,
+                cleanerid: '',
+                title: "Tasks For")
+          ];
+          return 0;
+        } else {
+          user.lists!.insert(
+              0,
+              TodoList(
+                  tasks: clone(user.lists![0].tasks),
+                  userid: userid,
+                  cleanerid: user.lists![0].cleanerid,
+                  title: "title"));
+        }
+        break;
+      default:
+    }
+    return 0;
+  }
+
+  TodoList? get latestList {
+    // ignore: prefer_is_empty
+    if (_beUser.lists == null || _beUser.lists!.length == 0) {
+      return null;
+    } else {
+      return _beUser.lists![0];
+    }
+  }
+
+  List<ToDoRoom> clone(List<ToDoRoom> rooms) {
+    List<ToDoRoom> todoList = [];
+    for (ToDoRoom room in rooms) {
+      todoList.add(
+        ToDoRoom.empty
+          ..roomId = room.id
+          ..active = room.active,
+      );
+      for (ToDoTask task in room.tasks) {
+        todoList[todoList.length - 1].tasks.add(ToDoTask.empty
+          ..taskId = task.id
+          ..active = task.active);
+      }
+    }
+    return todoList;
+  }
+
+  List<ToDoRoom> convertToInstance(List<Room> rooms) {
+    List<ToDoRoom> todoList = [];
+    for (Room room in rooms) {
+      todoList.add(
+        ToDoRoom.empty..roomId = room.id,
+      );
+      for (Task task in room.roomTasks) {
+        todoList[todoList.length - 1]
+            .tasks
+            .add(ToDoTask.empty..taskId = task.id);
+      }
+    }
+    return todoList;
   }
 
 //------------------------Rooms--------------------

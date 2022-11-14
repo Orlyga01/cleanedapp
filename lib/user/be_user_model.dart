@@ -6,7 +6,7 @@ class BeUser extends ModelClass<BeUser> {
   String? name;
   String phoneNo;
   List<Room> rooms;
-  List<TaskList>? lists;
+  List<TodoList>? lists;
 
   BeUser({
     id,
@@ -17,7 +17,7 @@ class BeUser extends ModelClass<BeUser> {
     createdAt,
     modifiedAt,
   }) : super(id: id, createdAt: createdAt, modifiedAt: modifiedAt);
-  static get empty {
+  static BeUser get empty {
     return BeUser(
         id: '', name: '', phoneNo: '', rooms: Room.getBasicRoomList());
   }
@@ -44,7 +44,11 @@ class BeUser extends ModelClass<BeUser> {
   factory BeUser.fromJ(Map<String, dynamic> mjson) {
     return BeUser.fromJson(mjson);
   }
-
+  List<BeUser>? listFromJson(List<dynamic>? list) {
+    return (list != null && list.isNotEmpty)
+        ? list.map((user) => BeUser.fromJson(user)).toList()
+        : null;
+  }
   // BeUser.fromJson(Map<String, dynamic> mjson)
   //     : title = mjson['title'],
   //       roomNo = mjson['roomNo'],

@@ -8,7 +8,6 @@ class Task extends ModelClass<Task> {
   List<String>? categories;
   String? description;
   String? img;
-  String? roomId;
   FrequencyEnum frequency;
   bool? active;
 
@@ -18,14 +17,12 @@ class Task extends ModelClass<Task> {
     required this.frequency,
     this.categories,
     this.description,
-    this.roomId,
     this.img,
     this.active = true,
     createdAt,
     modifiedAt,
   }) : super(id: id, createdAt: createdAt, modifiedAt: modifiedAt);
-  static Task get empty =>
-      Task(title: "", roomId: '', frequency: FrequencyEnum.everyTime);
+  static Task get empty => Task(title: "", frequency: FrequencyEnum.everyTime);
   bool get validate => !title.isEmptyBe;
 
   @override
@@ -36,7 +33,6 @@ class Task extends ModelClass<Task> {
     data['description'] = description;
     data['img'] = img;
     data['categories'] = jsonEncode(categories);
-    data['roomId'] = roomId;
     data['active'] = active;
     data['frequency'] = enumToString(frequency.toString());
     return data;
@@ -44,13 +40,12 @@ class Task extends ModelClass<Task> {
 
   Task.fromJson(Map<String, dynamic> mjson)
       : title = mjson['title'],
-        roomId = mjson['room'],
         frequency = enumFromString<FrequencyEnum>(
                 mjson['frequency'], FrequencyEnum.values) ??
             FrequencyEnum.everyTime,
         description = mjson['description'],
         categories = jsonDecode(mjson['categories']),
-        active = mjson['active']?? true,
+        active = mjson['active'] ?? true,
         img = mjson['img'] {
     super.fromJson(mjson);
   }
@@ -61,36 +56,47 @@ class Task extends ModelClass<Task> {
   }
 }
 
-class InsTask extends Task {
-  String listId;
-  bool? active;
+class ToDoTask extends ModelClass<ToDoTask> {
+  String taskId;
+  Task? task;
+  bool active;
+  bool complete;
 
-  InsTask({
-    required this.listId,
+  ToDoTask({
+    required this.taskId,
     this.active = true,
+    this.complete = false,
     id,
-    title,
-    roomId,
-    frequency,
-  }) : super(title: title, roomId: roomId, frequency: frequency);
-  static InsTask get empty => InsTask(
-      listId: '',
-      active: true,
-      title: '',
-      roomId: '',
-      frequency: FrequencyEnum.everyTime);
+    createdAt,
+    modifiedAt,
+  }) : super(id: id, createdAt: createdAt, modifiedAt: modifiedAt);
+
+  static ToDoTask get empty => ToDoTask(
+        taskId: '',
+        active: true,
+        complete: false,
+      );
 
   @override
   Map<String, dynamic> toJson() {
     final data = super.toJson();
-    data['listId'] = title;
+    data['taskId'] = taskId;
     data['active'] = active;
+    data['complete'] = complete;
     return data;
   }
 
   @override
-  InsTask.fromJson(Map<String, dynamic> mjson)
-      : listId = mjson['listId'],
+  ToDoTask.fromJson(Map<String, dynamic> mjson)
+      : taskId = mjson['taskId'],
         active = mjson["active"],
-        super.fromJson(mjson);
+        complete = mjson["complete"] {
+    super.fromJson(mjson);
+  }
+
+  List<ToDoTask>? listFromJson(List<dynamic>? list) {
+    return (list != null && list.isNotEmpty)
+        ? list.map((user) => ToDoTask.fromJson(user)).toList()
+        : null;
+  }
 }

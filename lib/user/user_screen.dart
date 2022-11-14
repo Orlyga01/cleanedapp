@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:cleanedapp/todo/todo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cleanedapp/export_all_ui.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
@@ -21,6 +22,22 @@ class UserScreen extends StatelessWidget {
   UserScreen({Key? key});
   @override
   Widget build(BuildContext context) {
+    return AppMainTemplate(
+        isHome: true,
+        title: const Text("User"),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+        children: [BeUserEditWidget()]);
+  }
+}
+
+class SendToCleanerScreen extends StatelessWidget {
+  // ignore: use_key_in_widget_constructors
+  final String? listId;
+  SendToCleanerScreen({Key? key, required this.listId});
+  @override
+  Widget build(BuildContext context) {
+    TodoList? list = BeUserController().getTaskListById(null);
+
     return AppMainTemplate(
         isHome: true,
         title: const Text("User"),
