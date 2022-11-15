@@ -5,50 +5,45 @@ import 'package:cleanedapp/todo/todo_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sharedor/common_functions.dart';
 
-class FirebaseTaskListRepository {
-  late String taskListid;
-  late CollectionReference _taskListCollection;
+class TodoListRepository {
+  late String todoListid;
+  late CollectionReference _todoListCollection;
   // ignore: unused_field
   late DocumentReference? _dbTaskList;
-  static final FirebaseTaskListRepository _dbTaskListRep =
-      FirebaseTaskListRepository._internal();
-  FirebaseTaskListRepository._internal();
-  factory FirebaseTaskListRepository({required String taskListid}) {
-    _dbTaskListRep._taskListCollection =
-        FirebaseFirestore.instance.collection("tasklists");
-    _dbTaskListRep.taskListid = taskListid;
-    if (!taskListid.isEmptyBe) {
+  static final TodoListRepository _dbTaskListRep =
+      TodoListRepository._internal();
+  TodoListRepository._internal();
+  factory TodoListRepository({required String todoListid}) {
+    _dbTaskListRep._todoListCollection =
+        FirebaseFirestore.instance.collection("todolist");
+    _dbTaskListRep.todoListid = todoListid;
+    if (!todoListid.isEmptyBe) {
       _dbTaskListRep._dbTaskList =
-          _dbTaskListRep._taskListCollection.doc(taskListid);
+          _dbTaskListRep._todoListCollection.doc(todoListid);
     }
     return _dbTaskListRep;
   }
-  Future<TodoList?> add(TodoList taskList) async {
-    // the taskList id will be the phone number
+  Future<TodoList?> add(TodoList todoList) async {
+    // the todoList id will be the phone number
     try {
-      await _taskListCollection.doc(taskList.id).set(taskList.toJson());
-      setTaskListId = taskList.id;
+      await _todoListCollection.doc(todoList.id).set(todoList.toJson());
 
-      return taskList;
+      return todoList;
     } catch (e) {
       throw e.toString();
     }
   }
 
-  Future<void> delete(String taskListid) {
-    return _taskListCollection.doc(taskListid).delete();
+  Future<void> delete(String todoListid) {
+    return _todoListCollection.doc(todoListid).delete();
   }
 
-  Future<TodoList?> get({String? id}) async {
-    if (id == null && taskListid.isEmptyBe) {
-      log("no taskList id provided");
-      throw "error";
-    }
-    id = id ?? taskListid;
-
+  Future<TodoList?> get(String? id) async {
+    if (id == null || id.isEmpty) return null;
+    print("ddd$id");
     try {
       DocumentSnapshot documentSnapshot =
-          await _taskListCollection.doc(id).get();
+          await _todoListCollection.doc(id).get();
       if (documentSnapshot.exists) {
         Map<String, dynamic> data =
             documentSnapshot.data() as Map<String, dynamic>;
@@ -61,32 +56,25 @@ class FirebaseTaskListRepository {
     }
   }
 
-  set setTaskListId(String value) {
-    taskListid = value;
-    if (!value.isEmptyBe) {
-      _dbTaskList = _taskListCollection.doc(value);
-    }
-  }
-
   Future<void> update(String? id,
-      [TodoList? taskList, String? fieldName, dynamic fieldValue]) {
+      [TodoList? todoList, String? fieldName, dynamic fieldValue]) {
     if (fieldName != null) {
       if (id == null) {
         log("----------error===========id was not passed to update");
-        throw "no taskList id";
+        throw "no todoList id";
       }
 
-      return _taskListCollection
+      return _todoListCollection
           .doc(id)
           .update({fieldName: fieldValue, "modifiedAt": DateTime.now()});
     } else {
-      if (taskList == null) {
-        log("----------error===========no taskList");
-        throw "no taskList ";
+      if (todoList == null) {
+        log("----------error===========no todoList");
+        throw "no todoList ";
       }
 
-      taskList.modifiedAt = DateTime.now();
-      return _taskListCollection.doc(taskList.id).update(taskList.toJson());
+      todoList.modifiedAt = DateTime.now();
+      return _todoListCollection.doc(todoList.id).update(todoList.toJson());
     }
   }
 }

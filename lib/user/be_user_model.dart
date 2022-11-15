@@ -6,14 +6,13 @@ class BeUser extends ModelClass<BeUser> {
   String? name;
   String phoneNo;
   List<Room> rooms;
-  List<TodoList>? lists;
+  List<String>? listsid;
 
   BeUser({
     id,
     required this.phoneNo,
     this.name,
     required this.rooms,
-    this.lists,
     createdAt,
     modifiedAt,
   }) : super(id: id, createdAt: createdAt, modifiedAt: modifiedAt);
@@ -28,6 +27,7 @@ class BeUser extends ModelClass<BeUser> {
     data['name'] = name;
     data['phoneNo'] = phoneNo;
     data['rooms'] = listToJson(rooms);
+    data['listsid'] = listsid?.join("@@");
     return data;
   }
 
@@ -38,6 +38,9 @@ class BeUser extends ModelClass<BeUser> {
     super.fromJson(mjson);
     name = mjson['name'];
     phoneNo = mjson['phoneNo'];
+    listsid = (mjson['listsid'] == null || mjson['listsid'] == '')
+        ? []
+        : mjson['listsid'].split("@@");
     rooms = Room.empty.listFromJson(mjson['rooms']) ?? [];
   }
 

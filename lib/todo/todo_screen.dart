@@ -3,20 +3,21 @@ import 'dart:developer';
 import 'package:cleanedapp/export_all_ui.dart';
 import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:cleanedapp/master_page.dart';
-import 'package:cleanedapp/misc/providers.dart';
 import 'package:cleanedapp/room/room_model.dart';
-import 'package:cleanedapp/room/room_widget.dart';
 import 'package:cleanedapp/task/task_model.dart';
+import 'package:cleanedapp/todo/todo_controller.dart';
+import 'package:cleanedapp/todo/todo_model.dart';
 import 'package:cleanedapp/todo/todo_widget.dart';
 import 'package:cleanedapp/user/be_user_controller.dart';
+import 'package:cleanedapp/user/be_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:sharedor/export_common.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:sharedor/helpers/export_helpers.dart';
 import 'package:sharedor/widgets/expanded_inside_list.dart';
+import 'package:sharedor/widgets/logo_spin.dart';
 import 'package:translator/translator.dart';
-
-import '../user/be_user_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ToDoScreen extends StatelessWidget {
   late bool newList;
@@ -24,29 +25,58 @@ class ToDoScreen extends StatelessWidget {
 
   // ignore: use_key_in_widget_constructors
   ToDoScreen({Key? key, this.newList = false});
+  TodoList? todoList;
+
+  Future<TodoList?> createList() async {
+    newList = todoList == null ? true : newList;
+
+    if (newList) {
+      return await TodoController().createList();
+    }
+    return null;
+  }
+
+  String get getTitle {
+    return newList
+        ? "New generated list".ctr()
+        : '${"Latest list from".ctr()} ${toDate(todoList!.modifiedAt)}';
+  }
+
   @override
   Widget build(BuildContext context) {
-    String title;
-    newList = BeUserController().latestList == null ? true : newList;
-    title = newList
-        ? "New generated list".ctr()
-        : '${"Latest list from".ctr()} ${toDate(BeUserController().latestList!.modifiedAt)}';
+    TodoController().getUserLatestList();
 
-    return AppMainTemplate(
-        isHome: false,
-        inPageTitle: title,
-        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-        children: [
-          ToDoWidget(
-            key: _key,
-            rooms: testRooms,
-          )
-        ]);
+    return FutureBuilder(
+        future: createList(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LogoSpinner();
+          }
+          if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          } else {
+            todoList = snapshot.data as TodoList;
+
+            return AppMainTemplate(
+                isHome: false,
+                inPageTitle: getTitle,
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.startTop,
+                children: [
+                  todoList != null
+                      ? ToDoWidget(
+                          key: _key,
+                          rooms: todoList!.tasks,
+                        )
+                      : LogoSpinner()
+                ]);
+          }
+        });
   }
 }
 
 class ToDoWidget extends StatefulWidget {
-  final List<Room> rooms;
+  final List<ToDoRoom> rooms;
   bool? updateRoomMode = true;
   bool tileExpanded = false;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();

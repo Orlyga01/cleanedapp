@@ -157,7 +157,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
   }
 
   Widget listTemplateSelection() {
-    if (user.id.isEmptyBe || user.lists.isEmptyBe) return SizedBox.shrink();
+    if (user.id.isEmptyBe || user.listsid.isEmptyBe) return SizedBox.shrink();
     return RadioButtonWidget(
         selectedItem: HouseType.flat,
         items: HouseType.values,
