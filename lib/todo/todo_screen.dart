@@ -111,13 +111,13 @@ class ToDoWidgetState extends State<ToDoWidget> {
     super.initState();
   }
 
-  setScroll(ScrollController scrollController) {
-    if (scont.hasClients) {
-      scont.animateTo(scont.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.fastOutSlowIn);
-    }
-  }
+  // setScroll(ScrollController scrollController) {
+  //   if (scont.hasClients) {
+  //     scont.animateTo(scont.position.maxScrollExtent,
+  //         duration: const Duration(milliseconds: 500),
+  //         curve: Curves.fastOutSlowIn);
+  //   }
+  // }
 
   void _onReorder(int oldIndex, int newIndex) {
     //abort if first row has been dragged or if try to drag above the first row
@@ -137,6 +137,7 @@ class ToDoWidgetState extends State<ToDoWidget> {
   }
 
   bool reset = true;
+  final ScrollController reorderScrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +203,6 @@ class ToDoWidgetState extends State<ToDoWidget> {
       // transRooms.add(room
       //   ..title = ''
       //   ..description = '');
-
     }
     setState(() {});
   }
@@ -238,6 +238,7 @@ class ToDoWidgetState extends State<ToDoWidget> {
     return ReorderableColumn(
       children: _rows,
       onReorder: _onReorder,
+      scrollController: reorderScrollController,
     );
   }
 }

@@ -5,7 +5,6 @@ import 'package:cleanedapp/helpers/global_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
-import 'package:sharedor/export_common.dart';
 
 class Circle {
   double size;

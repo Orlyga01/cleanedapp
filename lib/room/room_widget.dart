@@ -140,7 +140,7 @@ class _RoomWidgetState extends State<RoomWidget> {
                   padding: const EdgeInsets.all(8),
                   decoration: widget.readOnly ? null : StyleF.fromBox,
                   child: ListView.builder(
-                      scrollDirection: Axis.vertical,
+                      //    scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
                       padding: const EdgeInsets.all(8),

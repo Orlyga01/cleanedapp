@@ -119,6 +119,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
   }
 
   HouseType houseType = HouseType.flat;
+final ScrollController reorderScrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -229,6 +230,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
     return ReorderableColumn(
       children: _rows,
       onReorder: _onReorder,
+      scrollController: reorderScrollController ,
     );
   }
 }

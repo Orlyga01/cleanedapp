@@ -34,12 +34,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   google_sign_in: ^5.0.2
-  cloud_firestore: ^3.1.15
-  firebase_analytics: ^9.1.8
-  firebase_core: ^1.17.0
-  firebase_dynamic_links: ^2.0.7
-  firebase_storage: ^10.2.16
+  cloud_firestore: ^4.0.5
+  firebase_analytics: ^10.0.5
+  firebase_dynamic_links: ^5.0.5
+  firebase_storage: ^11.0.5
   cupertino_icons: ^1.0.2
+  firebase_core: ^2.2.0
 
   sharedor: 
     path: ../sharedor
@@ -50,12 +50,11 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   url_launcher: ^6.1.6
   flutter_form_builder: ^7.7.0
-  reorderables: ^0.5.0
+  reorderables: ^0.5.1
   translator: ^0.1.7
   flutter_riverpod: ^2.1.1
   riverpod_context: ^0.3.0
   # path: ../Desktop/authentication
-  
 dev_dependencies:
   flutter_test:
     sdk: flutter

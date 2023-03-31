@@ -43,7 +43,7 @@ class BeRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) {
-            return BackOfficeRoomScreen(roomId: args?["roomid"]);
+            return BackOfficeRoomScreen(roomId: args?["roomid"] ?? '');
           },
         );
       // case "clientlist":
@@ -97,7 +97,7 @@ class BeRouter {
         await PreferenceUtils().mapToStorage("actionForAfterLogIn", params);
       } catch (e) {
         if (kDebugMode) {
-          print("problem with storage: " + e.toString());
+          print("problem with storage: $e");
         }
         rethrow;
       }
@@ -106,5 +106,8 @@ class BeRouter {
       navigator.pushNamed("register", arguments: params);
       return;
     }
+  
   }
 }
+
+
